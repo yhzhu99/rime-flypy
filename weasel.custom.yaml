@@ -1,0 +1,59 @@
+customization:
+  distribution_code_name: Weasel
+  distribution_version: 0.16.3
+  generator: "Weasel::UIStyleSettings"
+  modified_time: "Tue Apr 15 23:29:11 2025"
+  rime_version: 1.11.2
+patch:
+  preset_color_schemes:
+    Catppuccin:
+    {
+      name: "Catppuccin",
+      author: "Yinghao",
+      back_color: 0xF5EDE8,
+      border_color: 0xF5EDE8,
+      candidate_text_color: 0x5B4D47,
+      comment_text_color: 0x6E96B8,
+      hilited_back_color: 0xFFE8E0,
+      hilited_candidate_back_color: 0xE8D5CF,
+      hilited_candidate_text_color: 0x4A5585,
+      hilited_comment_text_color: 0x6E96B8,
+      hilited_label_color: 0x8C7B73,
+      hilited_text_color: 0xB85F40,
+      label_color: 0xA28780,
+      shadow_color: 0x33000000,
+      text_color: 0x5B4D47,
+    }
+  style:
+    color_scheme: Catppuccin
+    font_point: 13
+    label_font_point: 11
+    comment_font_point: 12
+    horizontal: true
+    inline_preedit: true
+    layout:
+      {
+        align_type: bottom,
+        border: 1,
+        spacing: 5,
+        candidate_spacing: 20,
+        hilite_spacing: 5,
+        hilite_padding: 5,
+        margin_x: 0,
+        margin_y: 0,
+        round_corner: 5,
+        corner_radius: 10,
+        shadow_radius: 3,
+        shadow_offset_x: 3,
+        shadow_offset_y: 3,
+      }
+  "app_options":
+    com.microsoft.VSCode:
+      ascii_mode: false  # 初始爲西文模式
+      vim_mode: false    # 退出VIM插入模式自動切換輸入法狀態
+    com.google.Chrome:
+      # 規避 https://github.com/rime/squirrel/issues/435
+      inline: true
+    ru.keepcoder.Telegram:
+      # 規避 https://github.com/rime/squirrel/issues/475
+      inline: true

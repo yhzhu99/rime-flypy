@@ -1,0 +1,10 @@
+# Linux IBus-Rime frontend settings.
+patch:
+  # Keep the raw spelling (for example, "nihao") at the application cursor
+  # instead of previewing the first converted Chinese candidate there.
+  style/inline_preedit: true
+  style/preedit_style: composition
+  style/cursor_type: insert
+
+  # Preserve the horizontal candidate layout used by the Weasel config.
+  style/horizontal: true

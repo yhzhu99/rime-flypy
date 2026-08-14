@@ -1,0 +1,8 @@
+# Rime-generated build products and machine-local state.
+/build/
+/installation.yaml
+/user.yaml
+/sync/
+*.userdb/
+*.userdb.kct.snapshot
+*.userdb.txt

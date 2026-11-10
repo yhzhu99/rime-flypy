@@ -16,10 +16,14 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -r tests/requirements.txt
       - run: python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Preview setup without changing the runner
+        run: python setup.py --config-only --rime-dir "${{ runner.temp }}/rime-preview"
       - name: Windows map merge and preservation tests
         if: runner.os == 'Windows'
         shell: powershell
-        run: ./tests/keyboard.Tests.ps1
+        run: |
+          ./tests/keyboard.Tests.ps1
+          ./platforms/windows/install-rime.ps1
 
   librime:
     runs-on: windows-latest
@@ -42,7 +46,10 @@ jobs:
           7z x .local/weasel-0.17.4.0-installer.exe '-o.local/weasel' -y
           if ($LASTEXITCODE -ne 0) { throw 'Shared data extraction failed' }
       - name: Test real input behavior in a temporary user directory
-        run: python tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data
+        run: |
+          python -c "from pathlib import Path; import setup; setup.require_recent_engine(Path('.local/engine/dist/lib/rime.dll').resolve())"
+          if ($LASTEXITCODE -ne 0) { throw 'Engine prerequisite check failed' }
+          python tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data
 
   keyd:
     runs-on: ubuntu-latest

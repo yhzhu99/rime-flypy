@@ -35,7 +35,6 @@
 | --- | --- | --- | --- |
 | Windows / 小狼毫 | `%APPDATA%\Rime` | Scancode Map，无额外常驻软件，需重启 | [Windows](docs/windows.md) |
 | Linux / IBus-Rime | `~/.config/ibus/rime` | keyd，覆盖 X11、Wayland 和控制台 | [Linux](docs/linux.md) |
-| Linux / Fcitx5-Rime | `~/.local/share/fcitx5/rime` | 同一份 keyd 配置 | [Linux](docs/linux.md) |
 | macOS / 鼠须管 | `~/Library/Rime` | Karabiner-Elements | [macOS](docs/macos.md) |
 
 Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不能只复制 Windows 注册表配置。
@@ -46,7 +45,7 @@ Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不�
 
 - `default.custom.yaml`、`flypy*.yaml`、`flypy/`、`lua/`：共用方案、词库、固定语言键，以及既有日期、时间、快捷词和计算器扩展。
 - `weasel.custom.yaml`：Windows 的 Catppuccin 配色、字体、横排候选和 `global_ascii: true`。
-- `ibus_rime.custom.yaml`：IBus 光标处原始编码和横排候选；不负责 Fcitx5 外观。
+- `ibus_rime.custom.yaml`：IBus 光标处原始编码和横排候选。
 - `squirrel.custom.yaml`：macOS 的横排候选、Catppuccin 配色和应用选项。各前端读取自己的文件，不能假定外观和跨应用状态行为完全相同。
 - `platforms/`：系统改键配置及 Windows 的预览、应用、回退脚本。
 - `tests/`：平台配置检查、Windows 映射行为检查、真实 librime 输入行为测试。

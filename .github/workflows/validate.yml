@@ -1,0 +1,59 @@
+name: Validate input configuration
+on: [push, pull_request]
+permissions:
+  contents: read
+
+jobs:
+  configuration:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r tests/requirements.txt
+      - run: python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Windows map merge and preservation tests
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: ./tests/keyboard.Tests.ps1
+
+  librime:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract official engine and shared data without installing
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download 1.17.0 --repo rime/librime --pattern rime-33e7814-Windows-msvc-x64.7z --dir .local
+          gh release download 0.17.4 --repo rime/weasel --pattern weasel-0.17.4.0-installer.exe --dir .local
+          if ((Get-FileHash .local/rime-33e7814-Windows-msvc-x64.7z).Hash -ne '7478C7CAA4FF6B37DE86DABA1F7CE4A994A4F5BA24872A820FB2B3A9B01FED15') { throw 'Engine archive hash mismatch' }
+          if ((Get-FileHash .local/weasel-0.17.4.0-installer.exe).Hash -ne 'CF509534A8F5F8AF9C98ED7CBB8F135439F145A8CBE7E50EDE42BB5B5AB45C29') { throw 'Shared data archive hash mismatch' }
+          7z x .local/rime-33e7814-Windows-msvc-x64.7z '-o.local/engine' -y
+          if ($LASTEXITCODE -ne 0) { throw 'Engine extraction failed' }
+          7z x .local/weasel-0.17.4.0-installer.exe '-o.local/weasel' -y
+          if ($LASTEXITCODE -ne 0) { throw 'Shared data extraction failed' }
+      - name: Test real input behavior in a temporary user directory
+        run: python tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data
+
+  keyd:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: rvaiya/keyd
+          ref: f564288ac2b19d2305a5b39023c474805ff8fce5
+          path: .local/keyd
+      - name: Validate with keyd's actual config parser
+        run: |
+          make -C .local/keyd
+          .local/keyd/bin/keyd check platforms/linux/rime-flypy.conf

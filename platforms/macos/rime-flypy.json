@@ -1,0 +1,25 @@
+{
+  "title": "rime-flypy physical keyboard preferences",
+  "rules": [
+    {
+      "description": "rime-flypy: swap Caps Lock and Escape",
+      "manipulators": [
+        { "type": "basic", "from": { "key_code": "caps_lock", "modifiers": { "optional": ["any"] } }, "to": [{ "key_code": "escape" }] },
+        { "type": "basic", "from": { "key_code": "escape", "modifiers": { "optional": ["any"] } }, "to": [{ "key_code": "caps_lock", "hold_down_milliseconds": 100 }] }
+      ]
+    },
+    {
+      "description": "rime-flypy: swap left Control and left Option (Alt)",
+      "manipulators": [
+        { "type": "basic", "from": { "key_code": "left_control", "modifiers": { "optional": ["any"] } }, "to": [{ "key_code": "left_option" }] },
+        { "type": "basic", "from": { "key_code": "left_option", "modifiers": { "optional": ["any"] } }, "to": [{ "key_code": "left_control" }] }
+      ]
+    },
+    {
+      "description": "rime-flypy: dedicate right Option (Alt) to Chinese via F13",
+      "manipulators": [
+        { "type": "basic", "from": { "key_code": "right_option", "modifiers": { "optional": ["any"] } }, "to": [{ "key_code": "f13" }] }
+      ]
+    }
+  ]
+}

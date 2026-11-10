@@ -1,15 +1,15 @@
 # macOS / 鼠须管
 
+新电脑优先按 [完整配置指南](new-computer.md) 安装依赖，再执行 `python3 setup.py --apply`。它会备份并部署 Rime 配置、复制 Karabiner 规则模板；首次权限确认和规则启用仍按本页说明完成。
+
 ## 部署 Rime
 
 安装当前 [Squirrel / 鼠须管](https://github.com/rime/squirrel)，确认内核支持 `set_ascii_mode` 并带有 Lua 插件。旧版前端可能不能正确区分左右 Shift；遇到右 Shift 也改变语言时，应先升级并检查前端事件，不要把两侧都设成切换键。
 
-备份 `~/Library/Rime`。在仓库目录执行：
+仅部署 Rime 配置时，在仓库目录执行，原有文件会自动备份：
 
 ```sh
-mkdir -p "$HOME/Library/Rime"
-cp ./*.yaml "$HOME/Library/Rime/"
-cp -R lua flypy "$HOME/Library/Rime/"
+python3 setup.py --apply --config-only
 ```
 
 在鼠须管菜单选择“重新部署”。`squirrel.custom.yaml` 提供横排候选、原始编码和 Catppuccin 配色；VS Code 的初始模式设为中文，并关闭其 `vim_mode`。这些应用选项已从 Windows 的配置移到正确的 macOS 配置中。

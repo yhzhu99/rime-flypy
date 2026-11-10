@@ -1,16 +1,15 @@
 # Linux / IBus-Rime
 
+新电脑优先按 [完整配置指南](new-computer.md) 安装依赖，再执行 `python3 setup.py --apply`。入口统一使用 IBus-Rime，备份并部署 Rime 配置和 keyd 改键。下面是单项操作与排查说明。
+
 ## 部署 Rime
 
 本仓库统一使用 IBus-Rime。安装发行版提供的 IBus-Rime，同时确认实际 librime 包含固定语言功能和 Lua 插件。仓库测试使用 librime 1.17.0；老发行版可能需要更新相关包。无需维护第二套 Linux 输入法框架。
 
-备份已有 Rime 用户目录。在仓库目录复制配置：
+仅部署 Rime 配置时，在仓库目录执行。原有文件会自动备份：
 
 ```sh
-RIME_USER_DIR="$HOME/.config/ibus/rime"
-mkdir -p "$RIME_USER_DIR"
-cp ./*.yaml "$RIME_USER_DIR/"
-cp -R lua flypy "$RIME_USER_DIR/"
+python3 setup.py --apply --config-only
 ```
 
 IBus 可通过以下命令重启并选择 Rime，然后检查部署结果：

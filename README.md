@@ -2,6 +2,17 @@
 
 个人小鹤音形配置：共用词库、Lua 扩展和确定性的中英文选择键，分别配置 Windows、Linux、macOS 的系统改键。
 
+## 新电脑入口
+
+按 **[新电脑配置指南](docs/new-computer.md)** 安装依赖，然后在仓库目录运行：
+
+```sh
+python3 setup.py          # 预览，不修改系统；Windows 使用 python
+python3 setup.py --apply  # 备份、部署 Rime 和对应平台的改键配置
+```
+
+Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/内核安装脚本；macOS 使用鼠须管 + Karabiner。首次输入源选择、macOS 权限与规则启用、Windows 重启仍须手动完成，详见指南中的自动化范围表。Python 只用于安装配置，不常驻运行。
+
 ## 最终键位约定
 
 下表的“物理键”指键帽上原来的名字。只交换左 Ctrl/Alt，不交换右 Ctrl。
@@ -48,13 +59,14 @@ Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不�
 - `ibus_rime.custom.yaml`：IBus 光标处原始编码和横排候选。
 - `squirrel.custom.yaml`：macOS 的横排候选、Catppuccin 配色和应用选项。各前端读取自己的文件，不能假定外观和跨应用状态行为完全相同。
 - `platforms/`：系统改键配置及 Windows 的预览、应用、回退脚本。
+- `setup.py`：跨平台配置入口，默认预览，支持备份、只部署配置和受保护的文件回退。
 - `tests/`：平台配置检查、Windows 映射行为检查、真实 librime 输入行为测试。
 
 只同步这些配置文件。`build/`、`installation.yaml`、`user.yaml`、日志、同步缓存和学习用户词库不纳入版本控制。本次保留已有静态词库，没有新增本机学习记录。
 
 ## 更新和验证
 
-若仓库直接位于 Rime 用户目录，执行 `git pull --ff-only` 后重新部署。若仓库与用户目录分开，则更新后按平台文档复制配置并重新部署。
+若仓库直接位于 Rime 用户目录，执行 `git pull --ff-only` 后重新部署。若仓库与用户目录分开，更新后再次执行 `setup.py --apply`，或按平台文档执行单项操作。
 
 ```sh
 python -m pip install -r tests/requirements.txt

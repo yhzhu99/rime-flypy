@@ -1,10 +1,6 @@
-customization:
-  distribution_code_name: Weasel
-  distribution_version: 0.16.3
-  generator: "Weasel::UIStyleSettings"
-  modified_time: "Tue Apr 15 23:29:11 2025"
-  rime_version: 1.11.2
+# Windows Weasel frontend settings.
 patch:
+  global_ascii: true  # Share the selected input language across applications.
   preset_color_schemes:
     Catppuccin:
     {
@@ -47,13 +43,3 @@ patch:
         shadow_offset_x: 3,
         shadow_offset_y: 3,
       }
-  "app_options":
-    com.microsoft.VSCode:
-      ascii_mode: false  # 初始爲西文模式
-      vim_mode: false    # 退出VIM插入模式自動切換輸入法狀態
-    com.google.Chrome:
-      # 規避 https://github.com/rime/squirrel/issues/435
-      inline: true
-    ru.keepcoder.Telegram:
-      # 規避 https://github.com/rime/squirrel/issues/475
-      inline: true

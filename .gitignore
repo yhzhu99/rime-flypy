@@ -6,3 +6,9 @@
 *.userdb/
 *.userdb.kct.snapshot
 *.userdb.txt
+
+# Diagnostics, test environments, and local keyboard backups.
+*.log
+__pycache__/
+.venv/
+/.local/

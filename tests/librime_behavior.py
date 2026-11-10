@@ -8,6 +8,8 @@ import re
 import shutil
 import tempfile
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 root = Path(__file__).resolve().parent.parent
 if len(sys.argv) != 3:
     raise SystemExit("Usage: python tests/librime_behavior.py LIBRIME_LIBRARY SHARED_DATA_DIR")

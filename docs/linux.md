@@ -1,17 +1,15 @@
-# Linux / IBus 或 Fcitx5
+# Linux / IBus-Rime
+
+新电脑优先按 [完整配置指南](new-computer.md) 安装依赖，再执行 `python3 setup.py --apply`。入口统一使用 IBus-Rime，备份并部署 Rime 配置和 keyd 改键。下面是单项操作与排查说明。
 
 ## 部署 Rime
 
-安装发行版提供的 IBus-Rime 或 Fcitx5-Rime，同时确认实际 librime 包含固定语言功能和 Lua 插件。仓库测试使用 librime 1.17.0；老发行版可能需要更新相关包。IBus 与 Fcitx5 是二选一的输入法框架，不应同时接管同一桌面会话。
+本仓库统一使用 IBus-Rime。安装发行版提供的 IBus-Rime，同时确认实际 librime 包含固定语言功能和 Lua 插件。仓库测试使用 librime 1.17.0；老发行版可能需要更新相关包。无需维护第二套 Linux 输入法框架。
 
-备份已有 Rime 用户目录。在仓库目录选择对应路径，再复制配置：
+仅部署 Rime 配置时，在仓库目录执行。原有文件会自动备份：
 
 ```sh
-# IBus；使用 Fcitx5 时改成 "$HOME/.local/share/fcitx5/rime"
-RIME_USER_DIR="$HOME/.config/ibus/rime"
-mkdir -p "$RIME_USER_DIR"
-cp ./*.yaml "$RIME_USER_DIR/"
-cp -R lua flypy "$RIME_USER_DIR/"
+python3 setup.py --apply --config-only
 ```
 
 IBus 可通过以下命令重启并选择 Rime，然后检查部署结果：
@@ -21,7 +19,7 @@ ibus restart
 ibus engine rime
 ```
 
-Fcitx5 使用输入法菜单中的 Rime 重新部署功能，必要时执行 `fcitx5 -r` 并重新选择 Rime。`ibus_rime.custom.yaml` 仅控制 IBus 前端；Fcitx5 的候选窗口外观在 Fcitx5 自己的配置中调整。
+`ibus_rime.custom.yaml` 负责光标处原始编码与横排候选。
 
 ## 系统改键：keyd
 
@@ -41,7 +39,7 @@ sudo keyd reload
 
 默认 `[ids] *` 作用于所有匹配的键盘。若只想改某一把键盘，先用 `sudo keyd monitor` 查看设备 ID，再用具体 ID 替换 `*`。
 
-此时物理右 Alt 输出 F13，原来的 AltGr 字符输入功能不再可用。Rime 必须是当前输入法，桌面也不能把 F13 注册成其他全局快捷键。跨应用的输入模式共享由 IBus/Fcitx5 的设置决定；不要照抄 Windows 的 `global_ascii` 当作通用开关。
+此时物理右 Alt 输出 F13，原来的 AltGr 字符输入功能不再可用。Rime 必须是当前输入法，桌面也不能把 F13 注册成其他全局快捷键。跨应用的输入模式共享由 IBus 的设置决定；不要照抄 Windows 的 `global_ascii` 当作通用开关。
 
 ## 回退
 

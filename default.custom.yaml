@@ -1,4 +1,4 @@
-# Shared by Weasel, IBus/Fcitx Rime, and Squirrel.
+# Shared by Weasel, IBus-Rime, and Squirrel.
 # Requires librime with set_ascii_mode support and the librime-lua plugin.
 patch:
   schema_list:

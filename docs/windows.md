@@ -1,16 +1,15 @@
 # Windows / 小狼毫
 
+新电脑优先按 [完整配置指南](new-computer.md) 操作：安装依赖后，`python setup.py --apply` 会完成本页的配置复制、重新部署和注册表改键。下面保留各部分说明，便于单独预览、修改或回退。
+
 ## 部署输入法配置
 
 安装小狼毫和支持固定语言功能、Lua 扩展的内核。本次参考环境：小狼毫 0.17.4 + librime 1.17.0。小狼毫 0.17.4 安装包自带的旧内核需要单独更新，官方维护者的说明见 [#1692](https://github.com/rime/weasel/issues/1692)。更新前备份安装目录；不要使用不含 Lua 插件的内核替换，否则既有扩展和 F13 处理器都会失效。
 
-先备份 `%APPDATA%\Rime`。在仓库目录执行以下命令，复制配置及静态词库：
+仅复制 Rime 配置及静态词库时，在仓库目录执行以下命令。入口会自动备份被替换的文件：
 
 ```powershell
-$rimeUserDir = Join-Path $env:APPDATA 'Rime'
-New-Item -ItemType Directory -Force -Path $rimeUserDir | Out-Null
-Copy-Item -Path .\*.yaml -Destination $rimeUserDir -Force
-Copy-Item -LiteralPath .\lua, .\flypy -Destination $rimeUserDir -Recurse -Force
+python setup.py --apply --config-only
 ```
 
 通过小狼毫托盘菜单执行“重新部署”。英文状态按 F13 也必须能回到中文；日志不应出现 `right_alt_f13` 加载失败。
@@ -20,13 +19,13 @@ Copy-Item -LiteralPath .\lua, .\flypy -Destination $rimeUserDir -Recurse -Force
 预览不需要管理员权限：
 
 ```powershell
-.\platforms\windows\keyboard.ps1 -Action Plan
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\platforms\windows\keyboard.ps1 -Action Plan
 ```
 
 在管理员 PowerShell 中，进入仓库目录后应用：
 
 ```powershell
-.\platforms\windows\keyboard.ps1 -Action Apply
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\platforms\windows\keyboard.ps1 -Action Apply
 ```
 
 脚本合并五条物理键映射：Caps Lock/Escape 互换、左 Ctrl/Alt 互换、右 Alt `E038` → F13 `0064`。只替换这五个源键的配置，保留其他源键的映射。写入前保存完整旧值，默认备份目录为 `%LOCALAPPDATA%\rime-flypy\backups`，执行结果会打印具体文件名。
@@ -46,7 +45,7 @@ Copy-Item -LiteralPath .\lua, .\flypy -Destination $rimeUserDir -Recurse -Force
 先给 Rime 恢复一个中文入口：将 `Shift_L: set_ascii_mode` 改为 `Shift_L: commit_code`，重新部署。然后在管理员 PowerShell 中使用那次 Apply 打印的备份路径：
 
 ```powershell
-.\platforms\windows\keyboard.ps1 -Action Undo -BackupPath '实际备份文件.json'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\platforms\windows\keyboard.ps1 -Action Undo -BackupPath '实际备份文件.json'
 ```
 
 回退脚本要求当前完整映射仍与备份记录的应用结果一致；后续若有其他改键，它会停止，避免覆盖。完成后重启。F13 处理器可以留在 Rime 中，不会影响其他按键。

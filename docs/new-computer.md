@@ -4,16 +4,24 @@
 
 这不是零依赖、零交互安装：首次选择输入源、macOS 权限及 Karabiner 规则启用、Windows 重启仍由系统和用户完成。脚本会明确输出剩余步骤，不会把“已复制文件”当成“已完成桌面验收”。
 
-## 1. 获取仓库和 Python
+## 1. 获取仓库和 uv
 
-需要 Python 3.9 或更新版本；Windows 推荐 64 位 Python 3.12。可用 Git 克隆，也可以从 GitHub 下载 ZIP 并解压，不强制安装 Git。
+推荐三平台统一使用 **uv + Python 3.14**。仓库的 `.python-version` 固定 3.14 系列，uv 会在需要时下载解释器，无需另装全局 Python。可用 Git 克隆，也可以从 GitHub 下载 ZIP 并解压，不强制安装 Git。
 
 ```sh
 git clone https://github.com/yhzhu99/rime-flypy.git
 cd rime-flypy
 ```
 
-Windows 如未安装 Python，可先运行 `winget install -e --id Python.Python.3.12`，按安装器提示完成后重新打开终端。macOS 可使用 `brew install python`；Linux 使用发行版的 Python 3 包。
+安装 uv：
+
+- Windows：`winget install -e --id astral-sh.uv`，安装后重新打开终端。
+- macOS：已有 Homebrew 时用 `brew install uv`。
+- Linux：按 [uv 官方安装指南](https://docs.astral.sh/uv/getting-started/installation/) 安装。
+
+在仓库目录执行 `uv python install 3.14` 可提前准备解释器；后续统一使用 `uv run`。使用常规 CPython 构建，不额外启用 free-threaded 变体。Windows x64 的内核检查需要 x64 Python。
+
+整机约定：个人项目和 Python 工具优先由 uv 管理；每个项目独立环境并按依赖选择 Python 版本。不要替换 Linux/macOS 系统 Python，也不要卸载其他应用自带的解释器。这个仓库的安装脚本只使用标准库，无需创建 Python 包项目或维护应用依赖锁文件；测试依赖由 `tests/requirements.txt` 固定并通过 uv 隔离运行。
 
 ## 2. 按平台安装依赖
 
@@ -32,13 +40,13 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\platforms\windows\inst
 
 ### Linux：统一使用 IBus-Rime + keyd
 
-使用发行版的软件包管理器安装 Python 3、IBus-Rime、librime 的 Lua 插件、keyd。常见包名如下，执行前以所用发行版的软件包索引为准：
+使用发行版的软件包管理器安装 IBus-Rime、librime 的 Lua 插件、keyd。常见包名如下，执行前以所用发行版的软件包索引为准：
 
 | 发行版 | 安装示例 |
 | --- | --- |
-| Debian / Ubuntu | `sudo apt install python3 ibus-rime librime-plugin-lua keyd` |
-| Fedora | `sudo dnf install python3 ibus-rime librime-lua keyd` |
-| Arch Linux | `sudo pacman -S python ibus-rime librime-lua keyd` |
+| Debian / Ubuntu | `sudo apt install ibus-rime librime-plugin-lua keyd` |
+| Fedora | `sudo dnf install ibus-rime librime-lua keyd` |
+| Arch Linux | `sudo pacman -S ibus-rime librime-lua keyd` |
 
 **版本是前提**：旧系统仓库可能没有 keyd，或者 librime 太旧。必须先升级软件包来源/发行版，或按 [librime](https://github.com/rime/librime)、[IBus-Rime](https://github.com/rime/ibus-rime)、[keyd](https://github.com/rvaiya/keyd) 的官方安装说明安装支持的版本。本仓库不会自动添加第三方软件源，也不会在旧版本上假装配置成功。
 
@@ -49,7 +57,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\platforms\windows\inst
 已安装 [Homebrew](https://brew.sh/) 时，可执行：
 
 ```sh
-brew install python
+brew install uv
 brew install --cask squirrel karabiner-elements
 ```
 
@@ -57,17 +65,17 @@ brew install --cask squirrel karabiner-elements
 
 ## 3. 预览并应用
 
-Windows 用 `python`；Linux/macOS 用 `python3`。以下示例在仓库目录运行：
+三平台使用相同命令。以下示例必须在仓库目录运行，以读取 `.python-version`：
 
 ```sh
 # 只显示目标目录和将写入的文件，不写配置、不改键。
-python3 setup.py
+uv run setup.py
 
 # 应用 Rime 配置与对应平台的系统改键配置。
-python3 setup.py --apply
+uv run setup.py --apply
 ```
 
-Windows 的 `--apply` 在同一用户的管理员终端中运行；Linux/macOS 用普通桌面用户运行，**不要使用 `sudo python3 setup.py`**。Linux 入口仅在安装 keyd 系统配置、管理服务时调用 sudo。
+Windows 的 `--apply` 在同一用户的管理员终端中运行；Linux/macOS 用普通桌面用户运行，**不要使用 `sudo uv run setup.py`**。Linux 入口仅在安装 keyd 系统配置、管理服务时调用 sudo。
 
 | 平台 | `--apply` 自动完成 | 你最后完成的步骤 |
 | --- | --- | --- |
@@ -78,7 +86,7 @@ Windows 的 `--apply` 在同一用户的管理员终端中运行；Linux/macOS �
 只复制输入法配置、不操作系统改键时：
 
 ```sh
-python3 setup.py --apply --config-only
+uv run setup.py --apply --config-only
 ```
 
 非默认用户目录可加 `--rime-dir "实际用户目录"`。预览和 `--config-only` 可用于排查，不需要安装全部前端依赖。目录中不属于仓库管理范围的文件保持原样；本机 `user.yaml`、`installation.yaml`、学习词库和构建缓存不复制。
@@ -108,7 +116,7 @@ Linux 和 macOS 的桌面端到端行为尚未实机验证。自动化测试验�
 恢复某一次配置文件修改：
 
 ```sh
-python3 setup.py --restore-config "那次备份目录/manifest.json"
+uv run setup.py --restore-config "那次备份目录/manifest.json"
 ```
 
 恢复会先核对所有相关文件；存在后续编辑就停止，避免覆盖。它只恢复文件，不重启前端、不撤销系统改键，也不关闭 Karabiner 已启用的规则。新安装的软件也不会被卸载。

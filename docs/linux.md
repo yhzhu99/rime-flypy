@@ -1,6 +1,6 @@
 # Linux / IBus-Rime
 
-新电脑优先按 [完整配置指南](new-computer.md) 安装依赖，再执行 `python3 setup.py --apply`。入口统一使用 IBus-Rime，备份并部署 Rime 配置和 keyd 改键。下面是单项操作与排查说明。
+新电脑优先按 [完整配置指南](new-computer.md) 安装依赖，再执行 `uv run setup.py --apply`。入口统一使用 IBus-Rime，备份并部署 Rime 配置和 keyd 改键。下面是单项操作与排查说明。
 
 ## 部署 Rime
 
@@ -9,7 +9,7 @@
 仅部署 Rime 配置时，在仓库目录执行。原有文件会自动备份：
 
 ```sh
-python3 setup.py --apply --config-only
+uv run setup.py --apply --config-only
 ```
 
 IBus 可通过以下命令重启并选择 Rime，然后检查部署结果：

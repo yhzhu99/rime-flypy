@@ -7,11 +7,11 @@
 按 **[新电脑配置指南](docs/new-computer.md)** 安装依赖，然后在仓库目录运行：
 
 ```sh
-python3 setup.py          # 预览，不修改系统；Windows 使用 python
-python3 setup.py --apply  # 备份、部署 Rime 和对应平台的改键配置
+uv run setup.py          # 三平台一致：预览，不修改系统
+uv run setup.py --apply  # 备份、部署 Rime 和对应平台的改键配置
 ```
 
-Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/内核安装脚本；macOS 使用鼠须管 + Karabiner。首次输入源选择、macOS 权限与规则启用、Windows 重启仍须手动完成，详见指南中的自动化范围表。Python 只用于安装配置，不常驻运行。
+Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/内核安装脚本；macOS 使用鼠须管 + Karabiner。首次输入源选择、macOS 权限与规则启用、Windows 重启仍须手动完成，详见指南中的自动化范围表。统一用 uv 管理运行环境，`.python-version` 固定 Python 3.14 系列。Python 只用于安装配置，不常驻运行。
 
 ## 最终键位约定
 
@@ -69,14 +69,13 @@ Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不�
 若仓库直接位于 Rime 用户目录，执行 `git pull --ff-only` 后重新部署。若仓库与用户目录分开，更新后再次执行 `setup.py --apply`，或按平台文档执行单项操作。
 
 ```sh
-python -m pip install -r tests/requirements.txt
-python -m unittest discover -s tests -p 'test_*.py' -v
+uv run --with-requirements tests/requirements.txt python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 真实引擎测试（在临时目录部署，不修改正在使用的 Rime）：
 
 ```text
-python tests/librime_behavior.py <librime动态库路径> <Rime共享数据目录>
+uv run tests/librime_behavior.py <librime动态库路径> <Rime共享数据目录>
 ```
 
 GitHub Actions 在 Windows、Linux、macOS 检查配置；用实际 keyd 解析 Linux 映射，并在 Windows 上运行映射合并测试和 27 项 librime 行为检查。具体范围见 [验证记录](docs/validation.md)。

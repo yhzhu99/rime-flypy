@@ -1,6 +1,6 @@
 # Windows / 小狼毫
 
-新电脑优先按 [完整配置指南](new-computer.md) 操作：安装依赖后，`python setup.py --apply` 会完成本页的配置复制、重新部署和注册表改键。下面保留各部分说明，便于单独预览、修改或回退。
+新电脑优先按 [完整配置指南](new-computer.md) 操作：安装依赖后，`uv run setup.py --apply` 会完成本页的配置复制、重新部署和注册表改键。下面保留各部分说明，便于单独预览、修改或回退。
 
 ## 部署输入法配置
 
@@ -9,7 +9,7 @@
 仅复制 Rime 配置及静态词库时，在仓库目录执行以下命令。入口会自动备份被替换的文件：
 
 ```powershell
-python setup.py --apply --config-only
+uv run setup.py --apply --config-only
 ```
 
 通过小狼毫托盘菜单执行“重新部署”。英文状态按 F13 也必须能回到中文；日志不应出现 `right_alt_f13` 加载失败。

@@ -1,6 +1,6 @@
 # macOS / 鼠须管
 
-新电脑优先按 [完整配置指南](new-computer.md) 安装依赖，再执行 `python3 setup.py --apply`。它会备份并部署 Rime 配置、复制 Karabiner 规则模板；首次权限确认和规则启用仍按本页说明完成。
+新电脑优先按 [完整配置指南](new-computer.md) 安装依赖，再执行 `uv run setup.py --apply`。它会备份并部署 Rime 配置、复制 Karabiner 规则模板；首次权限确认和规则启用仍按本页说明完成。
 
 ## 部署 Rime
 
@@ -9,7 +9,7 @@
 仅部署 Rime 配置时，在仓库目录执行，原有文件会自动备份：
 
 ```sh
-python3 setup.py --apply --config-only
+uv run setup.py --apply --config-only
 ```
 
 在鼠须管菜单选择“重新部署”。`squirrel.custom.yaml` 提供横排候选、原始编码和 Catppuccin 配色；VS Code 的初始模式设为中文，并关闭其 `vim_mode`。这些应用选项已从 Windows 的配置移到正确的 macOS 配置中。

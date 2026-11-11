@@ -16,7 +16,7 @@
 
 `.github/workflows/validate.yml` 执行三类检查：
 
-1. Windows、Ubuntu、macOS 的 Python 配置及部署行为检查；Windows 另运行映射行为测试和安装器脚本的无写入预览；Windows/macOS 临时 runner 实际下载、校验并安装用户字体。
+1. Windows、Ubuntu、macOS 的 Python 配置及部署行为检查；Windows 另运行映射行为测试和安装器脚本的无写入预览；Windows/macOS 临时 runner 实际下载、校验并安装用户字体；Linux 临时 D-Bus 会话实际保存 IBus 设置，并用 fontconfig 检查中英文字体匹配。
 2. 下载固定版本、校验 SHA-256 的官方 librime 和小狼毫包，仅解压到工作目录，不安装输入法，在临时 Rime 用户目录测试 45 项真实引擎行为。
 3. 构建固定提交的 keyd，用 `keyd check` 验证配置语法。不启动 keyd 服务，也不接管 CI 键盘。
 

@@ -84,7 +84,7 @@ class ConfigurationTests(unittest.TestCase):
             self.assertEqual(weasel['style'][key], size)
             self.assertEqual(squirrel['style/' + key], size)
         self.assertEqual(weasel['style']['font_face'], 'Noto Sans, LXGW WenKai')
-        self.assertEqual(squirrel['style/font_face'], 'NotoSans-Regular, LXGWWenKai-Regular')
+        self.assertEqual(squirrel['style/font_face'], 'Noto Sans-Regular, LXGW WenKai-Regular')
         fonts = json.loads((ROOT / 'fonts.json').read_text(encoding='utf8'))
         self.assertEqual({font['family'] for font in fonts}, {'Noto Sans', 'LXGW WenKai'})
 

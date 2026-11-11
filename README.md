@@ -13,6 +13,8 @@ uv run setup.py --apply  # 备份、部署 Rime 和对应平台的改键配置
 
 Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/内核安装脚本；macOS 使用鼠须管 + Karabiner。首次输入源选择、macOS 权限与规则启用、Windows 重启仍须手动完成，详见指南中的自动化范围表。统一用 uv 管理运行环境，`.python-version` 固定 Python 3.14 系列。Python 只用于安装配置，不常驻运行。
 
+候选栏统一横排：**中文霞鹜文楷、英文 Noto Sans，主字号 20 pt**，Windows/macOS 使用同一浅色配色。安装入口会安装经过散列验证的用户字体；Linux 的原生桌面面板限制及独立字体入口见 [外观与共享状态](docs/appearance.md)。
+
 ## 最终键位约定
 
 下表的“物理键”指键帽上原来的名字。只交换左 Ctrl/Alt，不交换右 Ctrl。
@@ -38,6 +40,8 @@ Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/�
 
 左 Shift 单按识别由 Rime 内核处理，约需在 500 ms 内松开；正常 Shift 大写组合不切换语言。有待确认编码时，左 Shift 将原始字母上屏并进入英文，例如输入 `ni` 后按左 Shift 得到 `ni`，不会选择中文候选。重复按左 Shift 不会重复上屏或切回中文。物理 Caps Lock 已映射成 Escape，用于取消编码，不上屏，也不改变中英文模式。已在中文状态再次按 F13 会保留未完成编码。
 
+中英文模式在同一 Rime 服务的所有应用会话之间共享：左 Shift 选英文后，切到其他应用仍为英文；右 Alt 选中文后，各应用都沿用中文。新建会话和方案重新加载不会覆盖最新选择。只同步模式，不把待确认编码或上屏内容传到其他应用。输入法服务重新启动时默认中文。
+
 ## 前提和平台入口
 
 需要含 [librime #1015](https://github.com/rime/librime/pull/1015) 固定语言功能的内核，以及 **librime-lua**。本仓库用 **librime 1.17.0** 做真实引擎测试；前端版本号不等于内核版本号。老发行版只改 YAML 不会补上内核功能。
@@ -55,11 +59,12 @@ Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不�
 ## 仓库内容
 
 - `default.custom.yaml`、`flypy*.yaml`、`flypy/`、`lua/`：共用方案、词库、固定语言键，以及既有日期、时间、快捷词和计算器扩展。
-- `weasel.custom.yaml`：Windows 的 Catppuccin 配色、字体、横排候选和 `global_ascii: true`。
+- `weasel.custom.yaml`：Windows 的 Catppuccin 配色、20 pt 字体、横排候选和 `global_ascii: true`，移除终端强制英文等上游默认项。
 - `ibus_rime.custom.yaml`：IBus 光标处原始编码和横排候选。
-- `squirrel.custom.yaml`：macOS 的横排候选、Catppuccin 配色和应用选项。各前端读取自己的文件，不能假定外观和跨应用状态行为完全相同。
+- `squirrel.custom.yaml`：macOS 的横排候选、Catppuccin 配色和应用选项。清除上游应用专用中英文/Vim 模式，仅保留显示兼容选项；语言状态由共用 Lua 同步。
 - `platforms/`：系统改键配置及 Windows 的预览、应用、回退脚本。
 - `setup.py`：跨平台配置入口，默认预览，支持备份、只部署配置和受保护的文件回退。
+- `appearance.py`、`fonts.json`：固定版本/散列的用户字体安装、IBus 面板偏好与受保护的桌面设置回退。
 - `tests/`：平台配置检查、Windows 映射行为检查、真实 librime 输入行为测试。
 
 只同步这些配置文件。`build/`、`installation.yaml`、`user.yaml`、日志、同步缓存和学习用户词库不纳入版本控制。本次保留已有静态词库，没有新增本机学习记录。
@@ -78,6 +83,6 @@ uv run --with-requirements tests/requirements.txt python -m unittest discover -s
 uv run tests/librime_behavior.py <librime动态库路径> <Rime共享数据目录>
 ```
 
-GitHub Actions 在 Windows、Linux、macOS 检查配置；用实际 keyd 解析 Linux 映射，并在 Windows 上运行映射合并测试和 36 项 librime 行为检查。具体范围见 [验证记录](docs/validation.md)。
+GitHub Actions 在 Windows、Linux、macOS 检查配置；用实际 keyd 解析 Linux 映射，并在 Windows 上运行映射合并测试和 45 项 librime 行为检查。具体范围见 [验证记录](docs/validation.md)。
 
 **系统层实机验收仍然必需**：检查 Ctrl/Alt、Caps/Esc 互换；按左 Shift 后输入英文；重复按左 Shift 仍为英文；按右 Alt 输入小鹤编码并上屏；重复按右 Alt 仍为中文；右 Alt 单按不激活菜单；右 Shift 大写组合正常。

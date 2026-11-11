@@ -18,6 +18,19 @@ jobs:
       - run: uv run --with-requirements tests/requirements.txt python -m unittest discover -s tests -p "test_*.py" -v
       - name: Preview setup without changing the runner
         run: uv run setup.py --config-only --rime-dir "${{ runner.temp }}/rime-preview"
+      - name: Preview font setup without changing the runner
+        run: uv run appearance.py
+      - name: Install verified user-local fonts on disposable Windows and macOS runners
+        if: runner.os != 'Linux'
+        run: uv run appearance.py --apply
+      - name: Exercise Linux fonts and real IBus settings in a temporary desktop bus
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ibus fontconfig dbus-x11
+          dbus-run-session -- uv run appearance.py --apply
+          fc-match -f '%{family}\n' 'Noto Sans,LXGW WenKai:charset=0041' | grep -F 'Noto Sans'
+          fc-match -f '%{family}\n' 'Noto Sans,LXGW WenKai:charset=4e2d' | grep -F 'LXGW WenKai'
       - name: Windows map merge and preservation tests
         if: runner.os == 'Windows'
         shell: powershell

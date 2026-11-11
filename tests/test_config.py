@@ -62,10 +62,31 @@ class ConfigurationTests(unittest.TestCase):
     def test_frontend_settings_are_separate(self):
         weasel = yaml.safe_load((ROOT / 'weasel.custom.yaml').read_text(encoding='utf8'))['patch']
         self.assertTrue(weasel['global_ascii'])
-        self.assertNotIn('app_options', weasel)
+        for options in weasel['app_options'].values():
+            self.assertNotIn('ascii_mode', options)
+            self.assertNotIn('vim_mode', options)
         squirrel = yaml.safe_load((ROOT / 'squirrel.custom.yaml').read_text(encoding='utf8'))['patch']
         self.assertEqual(squirrel['style/candidate_list_layout'], 'linear')
-        self.assertIn('app_options/com.microsoft.VSCode', squirrel)
+        for options in squirrel['app_options'].values():
+            self.assertNotIn('ascii_mode', options)
+            self.assertNotIn('vim_mode', options)
+
+    def test_readable_horizontal_frontends(self):
+        weasel = yaml.safe_load((ROOT / 'weasel.custom.yaml').read_text(encoding='utf8'))['patch']
+        squirrel = yaml.safe_load((ROOT / 'squirrel.custom.yaml').read_text(encoding='utf8'))['patch']
+        ibus = yaml.safe_load((ROOT / 'ibus_rime.custom.yaml').read_text(encoding='utf8'))['patch']
+        self.assertTrue(weasel['style']['horizontal'])
+        self.assertFalse(weasel['style']['vertical_text'])
+        self.assertEqual(squirrel['style/candidate_list_layout'], 'linear')
+        self.assertEqual(squirrel['style/text_orientation'], 'horizontal')
+        self.assertTrue(ibus['style/horizontal'])
+        for key, size in [('font_point', 20), ('label_font_point', 14), ('comment_font_point', 16)]:
+            self.assertEqual(weasel['style'][key], size)
+            self.assertEqual(squirrel['style/' + key], size)
+        self.assertEqual(weasel['style']['font_face'], 'Noto Sans, LXGW WenKai')
+        self.assertEqual(squirrel['style/font_face'], 'Noto Sans-Regular, LXGW WenKai-Regular')
+        fonts = json.loads((ROOT / 'fonts.json').read_text(encoding='utf8'))
+        self.assertEqual({font['family'] for font in fonts}, {'Noto Sans', 'LXGW WenKai'})
 
 
 if __name__ == '__main__':

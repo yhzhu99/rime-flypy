@@ -67,6 +67,7 @@ finalize = api('RimeFinalize', None)
 maintain = api('RimeStartMaintenance', c.c_int, c.c_int)
 join = api('RimeJoinMaintenanceThread', None)
 create = api('RimeCreateSession', sid_t)
+destroy = api('RimeDestroySession', c.c_int, sid_t)
 select = api('RimeSelectSchema', c.c_int, sid_t, c.c_char_p)
 process = api('RimeProcessKey', c.c_int, sid_t, c.c_int, c.c_int)
 set_option = api('RimeSetOption', None, sid_t, c.c_char_p, c.c_int)
@@ -177,6 +178,33 @@ try:
     candidates=[context.menu.candidates[i].text.decode('utf8') for i in range(context.menu.num_candidates)]
     check('Existing Lua date translator works',any(re.fullmatch(r'\d{4}年\d{2}月\d{2}日',x) for x in candidates))
     free_context(c.byref(context));clear(sid)
+    first = sid
+    tap(0xffe1,1)
+    sid = create()
+    assert sid and select(sid,b'flypy')
+    second = sid
+    check('New application session inherits shared English despite schema reset',mode())
+    check('First key in new application is English passthrough',process(sid,ord('a'),0)==0)
+    tap(0xffca)
+    check('Chinese selection propagates to inactive application',not get_option(first,b'ascii_mode'))
+    process(sid,ord('n'),0)
+    sid = first
+    tap(0xffe1,1)
+    check('English selection propagates without committing another application input',get_option(second,b'ascii_mode') and committed()=='')
+    sid = second
+    check('Shared language change does not fabricate another application commit',committed()=='')
+    clear(sid)
+    tap(0xffca)
+    process(sid,ord('n'),0)
+    tap(0xffe1,1)
+    check('Shared fixed English still commits raw code in the active application',committed()=='n' and mode())
+    sid = first
+    check('Raw code is never committed into inactive application',committed()=='' and mode())
+    assert select(second,b'flypydz')
+    check('Reloading a schema preserves the global language',get_option(second,b'ascii_mode'))
+    assert destroy(second)
+    tap(0xffca)
+    check('Destroying another session does not break language switching',not mode())
     report={'passed':len(results),'scope':'Real librime library with an isolated repository configuration. No OS keyboard events are injected.','tests':results,'chinese_output':text}
     print(json.dumps(report,ensure_ascii=False,indent=2))
 finally:

@@ -65,7 +65,9 @@ class ConfigurationTests(unittest.TestCase):
         self.assertNotIn('app_options', weasel)
         squirrel = yaml.safe_load((ROOT / 'squirrel.custom.yaml').read_text(encoding='utf8'))['patch']
         self.assertEqual(squirrel['style/candidate_list_layout'], 'linear')
-        self.assertIn('app_options/com.microsoft.VSCode', squirrel)
+        for options in squirrel['app_options'].values():
+            self.assertNotIn('ascii_mode', options)
+            self.assertNotIn('vim_mode', options)
 
 
 if __name__ == '__main__':

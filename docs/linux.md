@@ -39,7 +39,7 @@ sudo keyd reload
 
 默认 `[ids] *` 作用于所有匹配的键盘。若只想改某一把键盘，先用 `sudo keyd monitor` 查看设备 ID，再用具体 ID 替换 `*`。
 
-此时物理右 Alt 输出 F13，原来的 AltGr 字符输入功能不再可用。Rime 必须是当前输入法，桌面也不能把 F13 注册成其他全局快捷键。跨应用的输入模式共享由 IBus 的设置决定；不要照抄 Windows 的 `global_ascii` 当作通用开关。
+此时物理右 Alt 输出 F13，原来的 AltGr 字符输入功能不再可用。Rime 必须是当前输入法，桌面也不能把 F13 注册成其他全局快捷键。Rime 内的中英文模式由共用 Lua 在会话间同步；IBus/桌面是否按窗口切换输入法框架仍是另一项设置。保持 Rime 为输入源，不要照抄 Windows 的 `global_ascii` 当作通用开关。
 
 ## 回退
 

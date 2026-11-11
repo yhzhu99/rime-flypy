@@ -22,8 +22,13 @@ patch:
     hilited_candidate_back_color: 0xE8D5CF
     hilited_comment_text_color: 0x6E96B8
     hilited_candidate_label_color: 0x8C7B73
-  app_options/com.microsoft.VSCode:
-    ascii_mode: false  # Start in Chinese; left Shift explicitly selects English.
-    vim_mode: false
-  app_options/com.google.Chrome/inline: true
-  app_options/ru.keepcoder.Telegram/inline: true
+  # Replace the full upstream map so Terminal, VS Code, MacVim, etc. cannot
+  # override the shared language. Keep only display compatibility workarounds.
+  app_options:
+    com.apple.Terminal: { no_inline: true }
+    com.googlecode.iterm2: { no_inline: true }
+    org.vim.MacVim: { no_inline: true }
+    org.alacritty: { force_marked_text_for_direct_commit: true }
+    com.google.Chrome: { inline: true }
+    com.microsoft.edgemac: { inline: true }
+    ru.keepcoder.Telegram: { inline: true }

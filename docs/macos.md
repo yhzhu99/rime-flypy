@@ -12,7 +12,9 @@
 uv run setup.py --apply --config-only
 ```
 
-在鼠须管菜单选择“重新部署”。`squirrel.custom.yaml` 提供横排候选、原始编码和 Catppuccin 配色；中英文由共用 `language_keys.lua` 在应用会话间同步。`app_options` 整体替换鼠须管的上游默认项，移除 VS Code、终端等应用的中英文/Vim 模式特例，只保留行内显示等兼容设置。不要添加 Windows 专属的 `global_ascii` 冒充鼠须管开关。
+在鼠须管菜单选择“重新部署”。`squirrel.custom.yaml` 提供横排候选、原始编码、20 pt 文楷/无衬线字体和 Catppuccin 配色；中英文由共用 `language_keys.lua` 在应用会话间同步。`app_options` 整体替换鼠须管的上游默认项，移除 VS Code、终端等应用的中英文/Vim 模式特例，只保留行内显示等兼容设置。不要添加 Windows 专属的 `global_ascii` 冒充鼠须管开关。
+
+字体的独立安装、应用间状态共享和验证见 [外观与共享状态](appearance.md)。`--config-only` 不安装字体，首次可先执行 `uv run appearance.py --apply`。
 
 ## 系统改键：Karabiner-Elements
 

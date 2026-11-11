@@ -18,6 +18,11 @@ jobs:
       - run: uv run --with-requirements tests/requirements.txt python -m unittest discover -s tests -p "test_*.py" -v
       - name: Preview setup without changing the runner
         run: uv run setup.py --config-only --rime-dir "${{ runner.temp }}/rime-preview"
+      - name: Preview font setup without changing the runner
+        run: uv run appearance.py
+      - name: Install verified user-local fonts on disposable Windows and macOS runners
+        if: runner.os != 'Linux'
+        run: uv run appearance.py --apply
       - name: Windows map merge and preservation tests
         if: runner.os == 'Windows'
         shell: powershell

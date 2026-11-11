@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install repository configuration; preview by default, never install applications."""
+"""Install configuration and user fonts; preview by default, never install applications."""
 import argparse
 import ctypes
 import ctypes.util
@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import appearance
 
 ROOT = Path(__file__).resolve().parent
 RIME_FILES = (
@@ -143,7 +144,7 @@ def restore_configuration(manifest_path):
             destination.unlink()
         else:
             shutil.copy2(saved, destination)
-    print('Configuration restored. Redeploy Rime. System mappings and enabled Karabiner rules require the separate rollback steps in docs/.')
+    print('Configuration restored. Redeploy Rime. Fonts, IBus preferences, system mappings, and enabled Karabiner rules have separate rollback steps in docs/.')
 
 
 def run(command):
@@ -240,9 +241,9 @@ def finish_platform(kind, backup, installation):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument('--apply', action='store_true', help='Write configuration and apply the platform mapping.')
+    mode.add_argument('--apply', action='store_true', help='Write configuration, install fonts, and apply the platform mapping.')
     mode.add_argument('--restore-config', type=Path, metavar='MANIFEST', help='Restore files only; system keyboard rollback is separate.')
-    parser.add_argument('--config-only', action='store_true', help='Copy Rime files only; skip prerequisites, system mappings, and reload.')
+    parser.add_argument('--config-only', action='store_true', help='Copy Rime files only; skip fonts, desktop settings, prerequisites, system mappings, and reload.')
     parser.add_argument('--rime-dir', type=Path, help='Override the Rime user directory.')
     parser.add_argument('--backup-dir', type=Path, help='Override the local backup parent directory.')
     args = parser.parse_args(argv)
@@ -257,12 +258,18 @@ def main(argv=None):
     if not args.apply:
         for change in changes:
             print(change['destination'])
-        print('Preview only. Install prerequisites from docs/new-computer.md, then pass --apply. --config-only excludes system mappings.')
+        if not args.config_only:
+            print(f'User font directory: {appearance.user_directories(kind)[0]}')
+            if kind == 'linux':
+                print('Standard IBus panel: horizontal, Noto Sans/LXGW WenKai 20 pt; global input engine.')
+        print('Preview only. Install prerequisites from docs/new-computer.md, then pass --apply. --config-only excludes fonts, desktop settings, and system mappings.')
         return
     installation = None if args.config_only else preflight(kind)
+    prepared_appearance = None if args.config_only else appearance.prepare(kind)
     backup = apply_configuration(changes, (args.backup_dir or default_backup).expanduser(), kind)
     print(f'Configuration backup: {backup / "manifest.json"}')
     if not args.config_only:
+        appearance.apply(prepared_appearance, backup)
         finish_platform(kind, backup, installation)
     else:
         print('Rime configuration copied only. Redeployment and keyboard mapping were intentionally skipped.')

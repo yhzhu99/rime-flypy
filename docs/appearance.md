@@ -14,7 +14,9 @@ Noto Sans 排在字体回退列表的前面，负责拉丁字母和数字；其�
 
 背景接近白色，略带暖调；所有候选文字统一使用深灰，序号和注释使用较深的灰蓝色。首选项用边界清晰的浅蓝色直角底块区分，文字保持深灰；Windows 移除候选窗阴影，避免边缘显得模糊。保留序号区分候选。
 
-选中色块作为独立矩形，四周留等宽空隙，与圆角外框分开。Windows 的 `margin_x`/`margin_y` 均为 8，`hilite_padding` 为 4。旧的纵向边距 6、色块扩展 5 让色块过于贴近外框圆角，触发小狼毫的自动圆角处理，造成左侧弯曲、右侧直角的不一致。测试覆盖常用 DPI 比例下色块与外框圆角不相交；实现依据见 [小狼毫圆角判定](https://github.com/rime/weasel/blob/0.17.4/WeaselUI/StandardLayout.cpp#L132) 和 [自动替换色块圆角](https://github.com/rime/weasel/blob/0.17.4/WeaselUI/WeaselPanel.cpp#L494)。
+选中色块作为独立矩形，与圆角外框分开。Windows 使用 4 px 的逻辑间距：色块内边距 4，色块之间的预留间隙 4，色块到外框的留白 4（不含边框），序号与文字之间 4。因此 `margin_x`/`margin_y` 均为 8，`hilite_padding` 为 4，`candidate_spacing` 为 12，`hilite_spacing` 为 4。`candidate_spacing` 是两个候选内容之间的距离，减去两侧各 4 的色块内边距，实际剩余间隙为 4。普通候选保留相同的虚拟色块空间，切换选中项时布局不跳动。
+
+测试覆盖常用 DPI 比例下的间距平衡，以及色块与外框圆角不相交，避免小狼毫自动把选中色块裁成不对称圆角。实现依据见 [横排候选布局](https://github.com/rime/weasel/blob/0.17.4/WeaselUI/HorizontalLayout.cpp#L87)、[圆角判定](https://github.com/rime/weasel/blob/0.17.4/WeaselUI/StandardLayout.cpp#L132) 和 [自动替换色块圆角](https://github.com/rime/weasel/blob/0.17.4/WeaselUI/WeaselPanel.cpp#L494)。这些是小狼毫的逻辑布局单位，屏幕实际像素随缩放改变；macOS 使用鼠须管原生布局。
 
 | 用途 | RGB 色值 |
 | --- | --- |

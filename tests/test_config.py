@@ -102,6 +102,13 @@ class ConfigurationTests(unittest.TestCase):
                 gap_y = int(layout['margin_y'] * scale) - padding - 1
                 self.assertGreater(gap_x, 0)
                 self.assertGreater(gap_y, 0)
+                # Reserve the same gap between padded candidate cells as at
+                # the outer edge, including when the selected index changes.
+                cell_gap = int(layout['candidate_spacing'] * scale) - 2 * padding
+                outer_gap = int(layout['margin_x'] * scale) - padding
+                self.assertLessEqual(abs(cell_gap - outer_gap), 1)
+                self.assertGreater(cell_gap, 0)
+                self.assertEqual(int(layout['hilite_spacing'] * scale), padding)
                 dx = max(radius - gap_x, 0)
                 dy = max(radius - gap_y, 0)
                 self.assertLessEqual(dx * dx + dy * dy, radius * radius)

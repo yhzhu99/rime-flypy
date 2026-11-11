@@ -36,8 +36,9 @@ patch:
         align_type: bottom
         border: 1
         spacing: 8
-        candidate_spacing: 20
-        hilite_spacing: 5
+        # Text-to-text spacing = two 4 px paddings + a 4 px gap between cells.
+        candidate_spacing: 12
+        hilite_spacing: 4
         # Keep a uniform inset so Weasel cannot round the highlight to the frame.
         hilite_padding: 4
         margin_x: 8

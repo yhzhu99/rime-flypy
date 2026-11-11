@@ -1,6 +1,9 @@
 # Windows Weasel frontend settings.
 patch:
   global_ascii: true  # Share the selected input language across applications.
+  # Replace upstream cmd.exe/conhost.exe ASCII defaults, retaining only UI fixes.
+  app_options:
+    firefox.exe: { inline_preedit: true }
   preset_color_schemes:
     Catppuccin:
       name: "Catppuccin"

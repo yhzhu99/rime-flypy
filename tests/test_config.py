@@ -62,7 +62,9 @@ class ConfigurationTests(unittest.TestCase):
     def test_frontend_settings_are_separate(self):
         weasel = yaml.safe_load((ROOT / 'weasel.custom.yaml').read_text(encoding='utf8'))['patch']
         self.assertTrue(weasel['global_ascii'])
-        self.assertNotIn('app_options', weasel)
+        for options in weasel['app_options'].values():
+            self.assertNotIn('ascii_mode', options)
+            self.assertNotIn('vim_mode', options)
         squirrel = yaml.safe_load((ROOT / 'squirrel.custom.yaml').read_text(encoding='utf8'))['patch']
         self.assertEqual(squirrel['style/candidate_list_layout'], 'linear')
         for options in squirrel['app_options'].values():

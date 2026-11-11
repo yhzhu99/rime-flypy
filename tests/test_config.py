@@ -119,6 +119,11 @@ class ConfigurationTests(unittest.TestCase):
             return sum(v * weight for v, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
 
         self.assertGreater(luminance(windows_colors['back_color']), 0.9)
+        self.assertGreaterEqual(
+            (luminance(windows_colors['back_color']) + 0.05) /
+            (luminance(windows_colors['hilited_candidate_back_color']) + 0.05),
+            1.25,
+        )
         for foreground, background in [
             ('text_color', 'back_color'),
             ('candidate_text_color', 'back_color'),

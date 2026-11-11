@@ -130,10 +130,13 @@ class ConfigurationTests(unittest.TestCase):
         ]:
             self.assertEqual(windows_colors[selected], windows_colors[normal], selected)
         self.assertNotEqual(windows_colors['hilited_candidate_back_color'], windows_colors['back_color'])
-        self.assertEqual(weasel['style']['layout']['round_corner'], 0)
+        layout = weasel['style']['layout']
+        self.assertGreater(layout['round_corner'], 0)
+        self.assertLessEqual(layout['round_corner'], layout['corner_radius'])
+        self.assertEqual(squirrel['style/hilited_corner_radius'], layout['round_corner'])
+        self.assertEqual(squirrel['style/corner_radius'], layout['corner_radius'])
         self.assertEqual(weasel['style']['layout']['shadow_radius'], 0)
         self.assertEqual(windows_colors['shadow_color'], 0)
-        self.assertEqual(squirrel['style/hilited_corner_radius'], 0)
         for key, value in mac_colors.items():
             windows_key = 'hilited_label_color' if key == 'hilited_candidate_label_color' else key
             self.assertEqual(windows_colors[windows_key], value, key)

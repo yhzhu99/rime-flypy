@@ -39,11 +39,11 @@ patch:
         # Text-to-text spacing = two 4 px paddings + a 4 px gap between cells.
         candidate_spacing: 12
         hilite_spacing: 4
-        # Keep a uniform inset so Weasel cannot round the highlight to the frame.
+        # Keep a uniform inset so Weasel preserves the highlight's own corners.
         hilite_padding: 4
         margin_x: 8
         margin_y: 8
-        round_corner: 0
+        round_corner: 4
         corner_radius: 6
         shadow_radius: 0
         shadow_offset_x: 0

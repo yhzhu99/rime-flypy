@@ -12,7 +12,7 @@ patch:
   style/label_font_point: 12
   style/comment_font_point: 13
   style/corner_radius: 6
-  style/hilited_corner_radius: 0
+  style/hilited_corner_radius: 4
   style/border_width: 8
   style/border_height: 8
   style/spacing: 8

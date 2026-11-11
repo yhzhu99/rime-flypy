@@ -91,7 +91,7 @@ uv run setup.py --apply --config-only
 
 非默认用户目录可加 `--rime-dir "实际用户目录"`。预览和 `--config-only` 可用于排查，不需要安装全部前端依赖。目录中不属于仓库管理范围的文件保持原样；本机 `user.yaml`、`installation.yaml`、学习词库和构建缓存不复制。
 
-主文字 20 pt、中文霞鹜文楷和英文 Noto Sans 的具体范围、Linux 桌面面板限制、独立安装和回退见 [外观与共享状态](appearance.md)。字体列表缓存未更新时需重启输入法前端。
+主文字 16 pt、中文霞鹜文楷和英文 Noto Sans 的具体范围、Linux 桌面面板限制、独立安装和回退见 [外观与共享状态](appearance.md)。字体列表缓存未更新时需重启输入法前端。
 
 ### 输入源只使用 Rime
 

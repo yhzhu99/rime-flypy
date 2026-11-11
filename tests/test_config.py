@@ -80,13 +80,45 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(squirrel['style/candidate_list_layout'], 'linear')
         self.assertEqual(squirrel['style/text_orientation'], 'horizontal')
         self.assertTrue(ibus['style/horizontal'])
-        for key, size in [('font_point', 20), ('label_font_point', 14), ('comment_font_point', 16)]:
+        for key, size in [('font_point', 16), ('label_font_point', 12), ('comment_font_point', 13)]:
             self.assertEqual(weasel['style'][key], size)
             self.assertEqual(squirrel['style/' + key], size)
         self.assertEqual(weasel['style']['font_face'], 'Noto Sans, LXGW WenKai')
         self.assertEqual(squirrel['style/font_face'], 'Noto Sans-Regular, LXGW WenKai-Regular')
         fonts = json.loads((ROOT / 'fonts.json').read_text(encoding='utf8'))
         self.assertEqual({font['family'] for font in fonts}, {'Noto Sans', 'LXGW WenKai'})
+
+    def test_light_palette_parity_and_text_contrast(self):
+        weasel = yaml.safe_load((ROOT / 'weasel.custom.yaml').read_text(encoding='utf8'))['patch']
+        squirrel = yaml.safe_load((ROOT / 'squirrel.custom.yaml').read_text(encoding='utf8'))['patch']
+        theme = weasel['style']['color_scheme']
+        self.assertEqual(squirrel['style/color_scheme'], theme)
+        self.assertEqual(squirrel['style/color_scheme_dark'], theme)
+        windows_colors = weasel['preset_color_schemes'][theme]
+        mac_colors = squirrel['preset_color_schemes/' + theme]
+        for key, value in mac_colors.items():
+            windows_key = 'hilited_label_color' if key == 'hilited_candidate_label_color' else key
+            self.assertEqual(windows_colors[windows_key], value, key)
+
+        def luminance(bgr):
+            channels = [(bgr >> shift & 255) / 255 for shift in (0, 8, 16)]
+            linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in channels]
+            return sum(v * weight for v, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
+
+        self.assertGreater(luminance(windows_colors['back_color']), 0.9)
+        for foreground, background in [
+            ('text_color', 'back_color'),
+            ('candidate_text_color', 'back_color'),
+            ('comment_text_color', 'back_color'),
+            ('label_color', 'back_color'),
+            ('hilited_text_color', 'hilited_back_color'),
+            ('hilited_candidate_text_color', 'hilited_candidate_back_color'),
+            ('hilited_comment_text_color', 'hilited_candidate_back_color'),
+            ('hilited_label_color', 'hilited_candidate_back_color'),
+        ]:
+            values = [luminance(windows_colors[key]) for key in (foreground, background)]
+            contrast = (max(values) + 0.05) / (min(values) + 0.05)
+            self.assertGreaterEqual(contrast, 4.5, foreground)
 
 
 if __name__ == '__main__':

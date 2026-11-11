@@ -4,11 +4,27 @@
 
 - 候选横向排列，文字横排，5 个候选项。
 - 中文用 **LXGW WenKai / 霞鹜文楷 Regular**，英文和数字优先用 **Noto Sans Regular**。
-- 主文字 **20 pt**；Windows/macOS 的候选序号 14 pt、注释 16 pt。
-- Windows/macOS 使用同一套浅色 Catppuccin 配色，不随系统深色模式自动换成另一套主题。
+- 主文字 **16 pt**；Windows/macOS 的候选序号 12 pt、注释 13 pt。
+- Windows/macOS 使用同一套清浅（paper_light）浅色配色，不随系统深色模式自动换成另一套主题。
 - 字体只用于输入法能控制的候选界面；上屏后的文本和应用内行内编码仍由应用决定字体。相同逻辑字号在不同 DPI/缩放比例下的物理尺寸可能不同。
 
 Noto Sans 排在字体回退列表的前面，负责拉丁字母和数字；其不含汉字，汉字由后面的霞鹜文楷显示。两种字体均为 SIL Open Font License。`fonts.json` 固定下载地址和 SHA-256，不将大体积字体二进制放进 Git；license 字段链接各自的许可证。
+
+### 清浅配色
+
+背景接近白色，略带暖调；正文使用深灰，序号和注释使用较深的灰蓝色，选中项用浅蓝底和深蓝字。避免用浅灰文字降低可读性。
+
+| 用途 | RGB 色值 |
+| --- | --- |
+| 背景 | `#FAFAF7` |
+| 正文/候选文字 | `#252A31` |
+| 序号/注释 | `#59636F` |
+| 选中背景 | `#E4EDF7` |
+| 选中文字 | `#193B5B` |
+| 选中序号 | `#3F566B` |
+| 边框 | `#DEE2E6` |
+
+Windows/macOS 配置使用 BGR 编码，表格使用常见的 RGB 编码。自动化检查两平台配色一致，所有正文、序号、注释与各自背景的对比度至少为 4.5:1。
 
 ## 安装和更新
 
@@ -39,12 +55,12 @@ IBus-Rime 原生读取 `style/horizontal`，因此候选方向直接设为横排
 gsettings set org.freedesktop.ibus.general use-global-engine true
 gsettings set org.freedesktop.ibus.panel lookup-table-orientation 0
 gsettings set org.freedesktop.ibus.panel use-custom-font true
-gsettings set org.freedesktop.ibus.panel custom-font 'Noto Sans,LXGW WenKai 20'
+gsettings set org.freedesktop.ibus.panel custom-font 'Noto Sans,LXGW WenKai 16'
 ```
 
 需要在已登录的普通桌面用户会话运行，且安装 `fontconfig`（`fc-cache`）和提供 `gsettings` 的 GLib 工具及 IBus schema。脚本会预检，不可写时停止。
 
-**GNOME Shell、KDE 等桌面自带的候选面板可能接管字体和主题**，不遵循标准 IBus 面板的字体偏好。此时横排仍由 Rime 请求，但字体/颜色须通过该桌面面板支持的设置或扩展配置；本仓库不修改整个桌面的系统字体，也不自动安装桌面扩展。因此不能承诺 Linux 任意桌面与 Windows/macOS 像素一致。原生 IBus 面板的配色沿用 GTK 主题，也不支持本仓库的 Catppuccin 字段。
+**GNOME Shell、KDE 等桌面自带的候选面板可能接管字体和主题**，不遵循标准 IBus 面板的字体偏好。此时横排仍由 Rime 请求，但字体/颜色须通过该桌面面板支持的设置或扩展配置；本仓库不修改整个桌面的系统字体，也不自动安装桌面扩展。因此不能承诺 Linux 任意桌面与 Windows/macOS 像素一致。原生 IBus 面板的配色沿用 GTK 主题，也不支持本仓库的自定义配色字段。
 
 ## 中英文状态：各应用共享
 
@@ -66,6 +82,6 @@ uv run appearance.py --restore-linux-settings '/实际备份路径/appearance.js
 
 恢复前核对所有当前值；发现后续编辑就整体停止。只恢复 IBus 设置，保留已安装字体。
 
-实机检查：在一个应用按左 Shift，再切到另一应用直接输入 `abc`；按右 Alt 切中文，再切回第一应用输入中文。检查中文候选为文楷，英文/序号为无衬线，横排、20 pt 主文字清晰。自动化的真实多会话引擎测试不替代 macOS/Linux 桌面和字体渲染验收。
+实机检查：在一个应用按左 Shift，再切到另一应用直接输入 `abc`；按右 Alt 切中文，再切回第一应用输入中文。检查中文候选为文楷，英文/序号为无衬线，横排、16 pt 主文字清晰。自动化的真实多会话引擎测试不替代 macOS/Linux 桌面和字体渲染验收。
 
 实现依据：[IBus-Rime 读取的界面字段](https://github.com/rime/ibus-rime/blob/57fba74724611b3c21e36656123fb62cf10b759c/rime_settings.c)、[鼠须管字体回退列表](https://github.com/rime/squirrel/blob/b7970a93b05ae1ca1bcd97888fd6aa3cd0458d3e/sources/SquirrelTheme.swift)、[鼠须管全局状态讨论](https://github.com/rime/squirrel/issues/145)。

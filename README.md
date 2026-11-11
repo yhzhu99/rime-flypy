@@ -13,7 +13,7 @@ uv run setup.py --apply  # 备份、部署 Rime 和对应平台的改键配置
 
 Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/内核安装脚本；macOS 使用鼠须管 + Karabiner。首次输入源选择、macOS 权限与规则启用、Windows 重启仍须手动完成，详见指南中的自动化范围表。统一用 uv 管理运行环境，`.python-version` 固定 Python 3.14 系列。Python 只用于安装配置，不常驻运行。
 
-候选栏统一横排：**中文霞鹜文楷、英文 Noto Sans，主字号 20 pt**，Windows/macOS 使用同一浅色配色。安装入口会安装经过散列验证的用户字体；Linux 的原生桌面面板限制及独立字体入口见 [外观与共享状态](docs/appearance.md)。
+候选栏统一横排：**中文霞鹜文楷、英文 Noto Sans，主字号 16 pt**，Windows/macOS 使用同一浅色配色。安装入口会安装经过散列验证的用户字体；Linux 的原生桌面面板限制及独立字体入口见 [外观与共享状态](docs/appearance.md)。
 
 ## 最终键位约定
 
@@ -59,9 +59,9 @@ Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不�
 ## 仓库内容
 
 - `default.custom.yaml`、`flypy*.yaml`、`flypy/`、`lua/`：共用方案、词库、固定语言键，以及既有日期、时间、快捷词和计算器扩展。
-- `weasel.custom.yaml`：Windows 的 Catppuccin 配色、20 pt 字体、横排候选和 `global_ascii: true`，移除终端强制英文等上游默认项。
+- `weasel.custom.yaml`：Windows 的清浅（paper_light）配色、16 pt 字体、横排候选和 `global_ascii: true`，移除终端强制英文等上游默认项。
 - `ibus_rime.custom.yaml`：IBus 光标处原始编码和横排候选。
-- `squirrel.custom.yaml`：macOS 的横排候选、Catppuccin 配色和应用选项。清除上游应用专用中英文/Vim 模式，仅保留显示兼容选项；语言状态由共用 Lua 同步。
+- `squirrel.custom.yaml`：macOS 的横排候选、清浅（paper_light）配色和应用选项。清除上游应用专用中英文/Vim 模式，仅保留显示兼容选项；语言状态由共用 Lua 同步。
 - `platforms/`：系统改键配置及 Windows 的预览、应用、回退脚本。
 - `setup.py`：跨平台配置入口，默认预览，支持备份、只部署配置和受保护的文件回退。
 - `appearance.py`、`fonts.json`：固定版本/散列的用户字体安装、IBus 面板偏好与受保护的桌面设置回退。

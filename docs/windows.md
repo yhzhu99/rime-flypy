@@ -42,7 +42,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\platforms\windows\keyb
 
 ## 字体和外观
 
-候选横排，主文字 20 pt，中文霞鹜文楷、英文与数字 Noto Sans。完整 setup 安装用户字体；只更新字体可执行 `uv run appearance.py --apply`，然后重新部署，字体列表未刷新时重启小狼毫服务。详见 [外观说明](appearance.md)。
+候选横排，主文字 16 pt，中文霞鹜文楷、英文与数字 Noto Sans。完整 setup 安装用户字体；只更新字体可执行 `uv run appearance.py --apply`，然后重新部署，字体列表未刷新时重启小狼毫服务。详见 [外观说明](appearance.md)。
 
 ## 回退
 

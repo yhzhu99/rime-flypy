@@ -17,7 +17,7 @@ LINUX_SETTINGS = {
     ('org.freedesktop.ibus.general', 'use-global-engine'): 'true',
     ('org.freedesktop.ibus.panel', 'lookup-table-orientation'): '0',
     ('org.freedesktop.ibus.panel', 'use-custom-font'): 'true',
-    ('org.freedesktop.ibus.panel', 'custom-font'): "'Noto Sans,LXGW WenKai 20'",
+    ('org.freedesktop.ibus.panel', 'custom-font'): "'Noto Sans,LXGW WenKai 16'",
 }
 
 

@@ -261,7 +261,7 @@ def main(argv=None):
         if not args.config_only:
             print(f'User font directory: {appearance.user_directories(kind)[0]}')
             if kind == 'linux':
-                print('Standard IBus panel: horizontal, Noto Sans/LXGW WenKai 20 pt; global input engine.')
+                print('Standard IBus panel: horizontal, Noto Sans/LXGW WenKai 16 pt; global input engine.')
         print('Preview only. Install prerequisites from docs/new-computer.md, then pass --apply. --config-only excludes fonts, desktop settings, and system mappings.')
         return
     installation = None if args.config_only else preflight(kind)

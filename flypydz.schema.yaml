@@ -16,6 +16,7 @@ switches:
 
 engine:
   processors:
+    - lua_processor@*language_keys
     - ascii_composer
     - key_binder
     - speller

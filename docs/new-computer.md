@@ -99,7 +99,7 @@ uv run setup.py --apply --config-only
 
 ## 4. 验收
 
-按 [README](../README.md#最终键位约定) 检查所有键位：左 Shift 固定英文；右 Alt 固定中文且不弹菜单；重复按不反转状态；右 Shift 输入大写；左 Ctrl/Alt 和 Caps/Esc 互换。具体平台排查见 [Windows](windows.md)、[Linux](linux.md)、[macOS](macos.md)。
+按 [README](../README.md#最终键位约定) 检查所有键位：左 Shift 固定英文且将未确认编码按原始字母上屏；Caps Lock（映射为 Esc）取消编码；右 Alt 固定中文且不弹菜单；重复按不反转状态；右 Shift 输入大写；左 Ctrl/Alt 和 Caps/Esc 互换。具体平台排查见 [Windows](windows.md)、[Linux](linux.md)、[macOS](macos.md)。
 
 Linux 和 macOS 的桌面端到端行为尚未实机验证。自动化测试验证文件部署、规则解析与 Rime 内核，不替代新电脑上的这一步。
 

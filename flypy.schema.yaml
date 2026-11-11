@@ -30,7 +30,7 @@ switches:
 
 engine:
   processors:
-    - lua_processor@*right_alt_f13
+    - lua_processor@*language_keys
     - ascii_composer
     - recognizer
     - key_binder

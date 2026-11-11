@@ -32,11 +32,11 @@ Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/�
 ## 两层配置
 
 1. **系统层**：交换修饰键，把物理右 Alt 映射成 **F13**。
-2. **Rime 层**：左 Shift 使用 `set_ascii_mode` 固定英文；`lua/right_alt_f13.lua` 在英文直通处理之前消费 F13 的按下和松开，将 `ascii_mode` 设为 `false`。
+2. **Rime 层**：左 Shift 使用 `set_ascii_mode` 固定英文；`lua/language_keys.lua` 在英文直通处理之前消费 F13 的按下和松开，将 `ascii_mode` 设为 `false`；左 Shift 确实进入英文模式时，把待确认的原始编码按英文上屏。
 
 系统改键在其他输入法下也生效，但 F13 只有在 **Rime 已选中且输入框接受输入法事件**时才会固定中文。它不是“从任意输入法唤回 Rime”的全局命令。只有一套 Rime 输入源时，英文直接使用 Rime 的英文模式即可。
 
-左 Shift 单按识别由 Rime 内核处理，约需在 500 ms 内松开；正常 Shift 大写组合不切换语言。固定英文会清除尚未确认的中文编码，已上屏文本不受影响。已在中文状态再次按 F13 会保留未完成编码。
+左 Shift 单按识别由 Rime 内核处理，约需在 500 ms 内松开；正常 Shift 大写组合不切换语言。有待确认编码时，左 Shift 将原始字母上屏并进入英文，例如输入 `ni` 后按左 Shift 得到 `ni`，不会选择中文候选。重复按左 Shift 不会重复上屏或切回中文。物理 Caps Lock 已映射成 Escape，用于取消编码，不上屏，也不改变中英文模式。已在中文状态再次按 F13 会保留未完成编码。
 
 ## 前提和平台入口
 
@@ -78,6 +78,6 @@ uv run --with-requirements tests/requirements.txt python -m unittest discover -s
 uv run tests/librime_behavior.py <librime动态库路径> <Rime共享数据目录>
 ```
 
-GitHub Actions 在 Windows、Linux、macOS 检查配置；用实际 keyd 解析 Linux 映射，并在 Windows 上运行映射合并测试和 27 项 librime 行为检查。具体范围见 [验证记录](docs/validation.md)。
+GitHub Actions 在 Windows、Linux、macOS 检查配置；用实际 keyd 解析 Linux 映射，并在 Windows 上运行映射合并测试和 36 项 librime 行为检查。具体范围见 [验证记录](docs/validation.md)。
 
 **系统层实机验收仍然必需**：检查 Ctrl/Alt、Caps/Esc 互换；按左 Shift 后输入英文；重复按左 Shift 仍为英文；按右 Alt 输入小鹤编码并上屏；重复按右 Alt 仍为中文；右 Alt 单按不激活菜单；右 Shift 大写组合正常。

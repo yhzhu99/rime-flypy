@@ -17,7 +17,7 @@ patch:
     Control_R: noop
 
   # Physical right Alt is mapped to F13 by the platform configuration.
-  # lua/right_alt_f13.lua consumes F13 before English-mode passthrough.
+  # lua/language_keys.lua consumes F13 and commits raw code on fixed English.
   key_binder/bindings:
     - { when: paging, accept: bracketleft, send: Page_Up }
     - { when: has_menu, accept: bracketright, send: Page_Down }

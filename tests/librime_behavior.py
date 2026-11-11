@@ -7,6 +7,7 @@ import sys
 import re
 import shutil
 import tempfile
+import time
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -143,8 +144,32 @@ try:
     process(sid,ord('n'),0)
     check('Pending input before fixed English selection',composing())
     tap(0xffe1,1)
-    check('Fixed English clears pending code',mode() and not composing())
-    check('Fixed English does not commit pending code',committed()=='')
+    check('Fixed English finishes pending composition',mode() and not composing())
+    check('Fixed English commits raw code instead of Chinese candidate',committed()=='n')
+    tap(0xffe1,1)
+    check('Repeated fixed English does not duplicate code',mode() and committed()=='')
+    for schema in (b'flypy', b'flypydz'):
+        assert select(sid, schema)
+        label = schema.decode()
+        tap(0xffca)
+        for char in 'ni': process(sid,ord(char),0)
+        tap(0xffe1,1)
+        check(label+' commits full raw code on fixed English',mode() and not composing() and committed()=='ni')
+        tap(0xffca)
+        process(sid,ord('n'),0)
+        tap(0xff1b)
+        check(label+' Escape cancels code without committing or changing mode',not composing() and not mode() and committed()=='')
+        process(sid,ord('n'),0)
+        process(sid,0xffe1,1)
+        time.sleep(0.55)
+        process(sid,0xffe1,(1<<30)|1)
+        check(label+' long Shift hold preserves Chinese composition',composing() and not mode() and committed()=='')
+        clear(sid)
+        process(sid,0xffe1,1); process(sid,ord('A'),1)
+        process(sid,ord('A'),(1<<30)|1); process(sid,0xffe1,1<<30)
+        check(label+' Shift chord does not force English',not mode())
+        committed(); clear(sid)
+    assert select(sid,b'flypy')
     tap(0xffca)
     for char in 'orq': process(sid,ord(char),0)
     context=Context();context.data_size=c.sizeof(Context)-c.sizeof(c.c_int)

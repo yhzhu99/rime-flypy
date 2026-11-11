@@ -32,10 +32,11 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(switches['Shift_L'], 'set_ascii_mode')
         for key in ('Shift_R', 'Alt_L', 'Alt_R', 'Control_L', 'Control_R', 'Caps_Lock'):
             self.assertEqual(switches[key], 'noop', key)
-        schema = yaml.safe_load((ROOT / 'flypy.schema.yaml').read_text(encoding='utf8'))
-        processors = schema['engine']['processors']
-        self.assertLess(processors.index('lua_processor@*right_alt_f13'), processors.index('ascii_composer'))
-        self.assertFalse(any(binding['accept'] == 'Shift_R' for binding in schema['key_binder']['bindings']))
+        for name in ('flypy', 'flypydz'):
+            schema = yaml.safe_load((ROOT / f'{name}.schema.yaml').read_text(encoding='utf8'))
+            processors = schema['engine']['processors']
+            self.assertLess(processors.index('lua_processor@*language_keys'), processors.index('ascii_composer'))
+            self.assertFalse(any(binding['accept'] == 'Shift_R' for binding in schema['key_binder'].get('bindings', [])))
 
     def test_linux_and_macos_physical_keys_agree(self):
         lines = (ROOT / 'platforms/linux/rime-flypy.conf').read_text().split('[main]', 1)[1].splitlines()

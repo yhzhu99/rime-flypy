@@ -14,6 +14,8 @@ Noto Sans 排在字体回退列表的前面，负责拉丁字母和数字；其�
 
 背景接近白色，略带暖调；所有候选文字统一使用深灰，序号和注释使用较深的灰蓝色。首选项用边界清晰的浅蓝色直角底块区分，文字保持深灰；Windows 移除候选窗阴影，避免边缘显得模糊。保留序号区分候选。
 
+选中色块作为独立矩形，四周留等宽空隙，与圆角外框分开。Windows 的 `margin_x`/`margin_y` 均为 8，`hilite_padding` 为 4。旧的纵向边距 6、色块扩展 5 让色块过于贴近外框圆角，触发小狼毫的自动圆角处理，造成左侧弯曲、右侧直角的不一致。测试覆盖常用 DPI 比例下色块与外框圆角不相交；实现依据见 [小狼毫圆角判定](https://github.com/rime/weasel/blob/0.17.4/WeaselUI/StandardLayout.cpp#L132) 和 [自动替换色块圆角](https://github.com/rime/weasel/blob/0.17.4/WeaselUI/WeaselPanel.cpp#L494)。
+
 | 用途 | RGB 色值 |
 | --- | --- |
 | 背景 | `#FAFAF7` |

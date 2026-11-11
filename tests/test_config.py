@@ -88,6 +88,24 @@ class ConfigurationTests(unittest.TestCase):
         fonts = json.loads((ROOT / 'fonts.json').read_text(encoding='utf8'))
         self.assertEqual({font['family'] for font in fonts}, {'Noto Sans', 'LXGW WenKai'})
 
+    def test_windows_highlight_stays_inside_rounded_frame(self):
+        config = yaml.safe_load((ROOT / 'weasel.custom.yaml').read_text(encoding='utf8'))['patch']
+        layout = config['style']['layout']
+        self.assertEqual(layout['margin_x'], layout['margin_y'])
+        # Weasel checks the inflated highlight against a frame deflated by 1 px.
+        # Touching its rounded corner triggers automatic asymmetric rounding.
+        for scale in (1, 1.25, 1.5, 1.75, 2, 3):
+            with self.subTest(scale=scale):
+                radius = int(layout['corner_radius'] * scale)
+                padding = int(layout['hilite_padding'] * scale)
+                gap_x = int(layout['margin_x'] * scale) - padding - 1
+                gap_y = int(layout['margin_y'] * scale) - padding - 1
+                self.assertGreater(gap_x, 0)
+                self.assertGreater(gap_y, 0)
+                dx = max(radius - gap_x, 0)
+                dy = max(radius - gap_y, 0)
+                self.assertLessEqual(dx * dx + dy * dy, radius * radius)
+
     def test_light_palette_parity_and_text_contrast(self):
         weasel = yaml.safe_load((ROOT / 'weasel.custom.yaml').read_text(encoding='utf8'))['patch']
         squirrel = yaml.safe_load((ROOT / 'squirrel.custom.yaml').read_text(encoding='utf8'))['patch']

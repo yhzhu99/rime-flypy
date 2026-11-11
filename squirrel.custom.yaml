@@ -14,7 +14,7 @@ patch:
   style/corner_radius: 6
   style/hilited_corner_radius: 0
   style/border_width: 8
-  style/border_height: 6
+  style/border_height: 8
   style/spacing: 8
   preset_color_schemes/paper_light:
     name: 清浅

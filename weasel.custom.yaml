@@ -38,9 +38,10 @@ patch:
         spacing: 8
         candidate_spacing: 20
         hilite_spacing: 5
-        hilite_padding: 5
+        # Keep a uniform inset so Weasel cannot round the highlight to the frame.
+        hilite_padding: 4
         margin_x: 8
-        margin_y: 6
+        margin_y: 8
         round_corner: 0
         corner_radius: 6
         shadow_radius: 0

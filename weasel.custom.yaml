@@ -12,12 +12,12 @@ patch:
       border_color: 0xE6E2DE
       candidate_text_color: 0x312A25
       comment_text_color: 0x6F6359
-      hilited_back_color: 0xF7EDE4
-      hilited_candidate_back_color: 0xF7EDE4
-      hilited_candidate_text_color: 0x5B3B19
+      hilited_back_color: 0xF7FAFA
+      hilited_candidate_back_color: 0xF7FAFA
+      hilited_candidate_text_color: 0x312A25
       hilited_comment_text_color: 0x6F6359
-      hilited_label_color: 0x6B563F
-      hilited_text_color: 0x5B3B19
+      hilited_label_color: 0x6F6359
+      hilited_text_color: 0x312A25
       label_color: 0x6F6359
       shadow_color: 0x14000000
       text_color: 0x312A25

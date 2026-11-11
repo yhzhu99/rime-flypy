@@ -96,6 +96,15 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(squirrel['style/color_scheme_dark'], theme)
         windows_colors = weasel['preset_color_schemes'][theme]
         mac_colors = squirrel['preset_color_schemes/' + theme]
+        for selected, normal in [
+            ('hilited_back_color', 'back_color'),
+            ('hilited_candidate_back_color', 'back_color'),
+            ('hilited_text_color', 'text_color'),
+            ('hilited_candidate_text_color', 'candidate_text_color'),
+            ('hilited_comment_text_color', 'comment_text_color'),
+            ('hilited_label_color', 'label_color'),
+        ]:
+            self.assertEqual(windows_colors[selected], windows_colors[normal], selected)
         for key, value in mac_colors.items():
             windows_key = 'hilited_label_color' if key == 'hilited_candidate_label_color' else key
             self.assertEqual(windows_colors[windows_key], value, key)

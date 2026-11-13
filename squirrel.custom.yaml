@@ -5,9 +5,9 @@ patch:
   style/candidate_list_layout: linear
   style/text_orientation: horizontal
   style/inline_preedit: true
-  style/font_face: "Noto Sans-Regular, LXGW WenKai-Regular"
-  style/label_font_face: "Noto Sans-Regular, LXGW WenKai-Regular"
-  style/comment_font_face: "Noto Sans-Regular, LXGW WenKai-Regular"
+  style/font_face: "Helvetica Neue-Regular, PingFang SC-Regular"
+  style/label_font_face: "Helvetica Neue-Regular, PingFang SC-Regular"
+  style/comment_font_face: "Helvetica Neue-Regular, PingFang SC-Regular"
   style/font_point: 16
   style/label_font_point: 12
   style/comment_font_point: 13

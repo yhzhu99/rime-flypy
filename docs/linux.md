@@ -19,7 +19,7 @@ ibus restart
 ibus engine rime
 ```
 
-`ibus_rime.custom.yaml` 负责光标处原始编码与横排候选。字体由 IBus/桌面面板管理；完整 setup 会安装用户字体并设置标准 IBus 面板的 16 pt 文楷/无衬线字体。`--config-only` 会跳过字体和面板设置，可另执行 `uv run appearance.py --apply`。GNOME Shell/KDE 可能接管字体与配色，详见 [外观说明](appearance.md)，不能把 YAML 的字体字段当成有效配置。
+`ibus_rime.custom.yaml` 负责光标处原始编码与横排候选。字体由 IBus/桌面面板管理；完整 setup 会设置标准 IBus 面板使用 `Sans 16` 和系统中文字体回退，不下载或安装字体。系统缺少中文字体时先通过发行版包管理器安装中文字体包。`--config-only` 会跳过面板设置，可另执行 `uv run appearance.py --apply`。GNOME Shell/KDE 可能接管字体与配色，详见 [外观说明](appearance.md)，不能把 YAML 的字体字段当成有效配置。
 
 ## 系统改键：keyd
 

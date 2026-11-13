@@ -5,6 +5,8 @@ import unittest
 
 import yaml
 
+import appearance
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -83,10 +85,10 @@ class ConfigurationTests(unittest.TestCase):
         for key, size in [('font_point', 16), ('label_font_point', 12), ('comment_font_point', 13)]:
             self.assertEqual(weasel['style'][key], size)
             self.assertEqual(squirrel['style/' + key], size)
-        self.assertEqual(weasel['style']['font_face'], 'Noto Sans, LXGW WenKai')
-        self.assertEqual(squirrel['style/font_face'], 'Noto Sans-Regular, LXGW WenKai-Regular')
-        fonts = json.loads((ROOT / 'fonts.json').read_text(encoding='utf8'))
-        self.assertEqual({font['family'] for font in fonts}, {'Noto Sans', 'LXGW WenKai'})
+        for key in ('font_face', 'label_font_face', 'comment_font_face'):
+            self.assertEqual(weasel['style'][key], 'Segoe UI, Microsoft YaHei')
+            self.assertEqual(squirrel['style/' + key], 'Helvetica Neue-Regular, PingFang SC-Regular')
+        self.assertEqual(appearance.LINUX_SETTINGS[('org.freedesktop.ibus.panel', 'custom-font')], "'Sans 16'")
 
     def test_windows_highlight_stays_inside_rounded_frame(self):
         config = yaml.safe_load((ROOT / 'weasel.custom.yaml').read_text(encoding='utf8'))['patch']

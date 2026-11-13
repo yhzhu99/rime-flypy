@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install configuration and user fonts; preview by default, never install applications."""
+"""Install configuration using system fonts; preview by default, never install applications."""
 import argparse
 import ctypes
 import ctypes.util
@@ -144,7 +144,7 @@ def restore_configuration(manifest_path):
             destination.unlink()
         else:
             shutil.copy2(saved, destination)
-    print('Configuration restored. Redeploy Rime. Fonts, IBus preferences, system mappings, and enabled Karabiner rules have separate rollback steps in docs/.')
+    print('Configuration restored. Redeploy Rime. IBus preferences, system mappings, and enabled Karabiner rules have separate rollback steps in docs/.')
 
 
 def run(command):
@@ -241,9 +241,9 @@ def finish_platform(kind, backup, installation):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument('--apply', action='store_true', help='Write configuration, install fonts, and apply the platform mapping.')
+    mode.add_argument('--apply', action='store_true', help='Write configuration, desktop preferences, and the platform mapping.')
     mode.add_argument('--restore-config', type=Path, metavar='MANIFEST', help='Restore files only; system keyboard rollback is separate.')
-    parser.add_argument('--config-only', action='store_true', help='Copy Rime files only; skip fonts, desktop settings, prerequisites, system mappings, and reload.')
+    parser.add_argument('--config-only', action='store_true', help='Copy Rime files only; skip desktop settings, prerequisites, system mappings, and reload.')
     parser.add_argument('--rime-dir', type=Path, help='Override the Rime user directory.')
     parser.add_argument('--backup-dir', type=Path, help='Override the local backup parent directory.')
     args = parser.parse_args(argv)
@@ -259,10 +259,10 @@ def main(argv=None):
         for change in changes:
             print(change['destination'])
         if not args.config_only:
-            print(f'User font directory: {appearance.user_directories(kind)[0]}')
+            print('Use platform system fonts; no additional fonts are installed.')
             if kind == 'linux':
-                print('Standard IBus panel: horizontal, Noto Sans/LXGW WenKai 16 pt; global input engine.')
-        print('Preview only. Install prerequisites from docs/new-computer.md, then pass --apply. --config-only excludes fonts, desktop settings, and system mappings.')
+                print('Standard IBus panel: horizontal, Sans 16 pt with system Chinese fallback; global input engine.')
+        print('Preview only. Install prerequisites from docs/new-computer.md, then pass --apply. --config-only excludes desktop settings and system mappings.')
         return
     installation = None if args.config_only else preflight(kind)
     prepared_appearance = None if args.config_only else appearance.prepare(kind)

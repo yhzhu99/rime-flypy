@@ -1,6 +1,6 @@
 # 新电脑：从这个仓库恢复整套输入习惯
 
-本仓库保存 Rime 配置、静态词库、扩展、外观、字体来源和五条系统键盘映射。**依赖安装后，用同一个 `setup.py --apply` 配置当前平台**。Python 只在配置时运行，不是新增的常驻改键程序。
+本仓库保存 Rime 配置、静态词库、扩展、外观、系统字体选择和五条系统键盘映射。**依赖安装后，用同一个 `setup.py --apply` 配置当前平台**。Python 只在配置时运行，不是新增的常驻改键程序。
 
 这不是零依赖、零交互安装：首次选择输入源、macOS 权限及 Karabiner 规则启用、Windows 重启仍由系统和用户完成。脚本会明确输出剩余步骤，不会把“已复制文件”当成“已完成桌面验收”。
 
@@ -40,13 +40,13 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\platforms\windows\inst
 
 ### Linux：统一使用 IBus-Rime + keyd
 
-使用发行版的软件包管理器安装 IBus-Rime、librime 的 Lua 插件、keyd、fontconfig 和 GLib 的 gsettings 工具。常见包名如下，执行前以所用发行版的软件包索引为准：
+使用发行版的软件包管理器安装 IBus-Rime、librime 的 Lua 插件、keyd 和 GLib 的 gsettings 工具。常见包名如下，执行前以所用发行版的软件包索引为准：
 
 | 发行版 | 安装示例 |
 | --- | --- |
-| Debian / Ubuntu | `sudo apt install ibus-rime librime-plugin-lua keyd fontconfig libglib2.0-bin` |
-| Fedora | `sudo dnf install ibus-rime librime-lua keyd fontconfig glib2` |
-| Arch Linux | `sudo pacman -S ibus-rime librime-lua keyd fontconfig glib2` |
+| Debian / Ubuntu | `sudo apt install ibus-rime librime-plugin-lua keyd libglib2.0-bin` |
+| Fedora | `sudo dnf install ibus-rime librime-lua keyd glib2` |
+| Arch Linux | `sudo pacman -S ibus-rime librime-lua keyd glib2` |
 
 **版本是前提**：旧系统仓库可能没有 keyd，或者 librime 太旧。必须先升级软件包来源/发行版，或按 [librime](https://github.com/rime/librime)、[IBus-Rime](https://github.com/rime/ibus-rime)、[keyd](https://github.com/rvaiya/keyd) 的官方安装说明安装支持的版本。本仓库不会自动添加第三方软件源，也不会在旧版本上假装配置成功。
 
@@ -79,11 +79,11 @@ Windows 的 `--apply` 在同一用户的管理员终端中运行；Linux/macOS �
 
 | 平台 | `--apply` 自动完成 | 你最后完成的步骤 |
 | --- | --- | --- |
-| Windows | 检查小狼毫及内核版本；备份并复制 Rime 配置；安装用户字体；重新部署；合并五条注册表改键 | 选中小狼毫输入源，重启 Windows |
-| Linux | 检查 IBus/keyd/内核；备份并复制 Rime 配置；安装用户字体、配置 IBus 面板；验证、安装 keyd 配置；启用并重载服务 | 在桌面添加 IBus 的 Rime 输入源；设置 IBus 为输入法框架；重新部署/重启 IBus |
-| macOS | 检查鼠须管和 Karabiner 安装；备份并复制 Rime 配置和 Karabiner 规则模板；安装用户字体 | 授予 Karabiner 所需权限、启用三条规则、添加鼠须管输入源并重新部署 |
+| Windows | 检查小狼毫及内核版本；备份并复制 Rime 配置；使用系统字体；重新部署；合并五条注册表改键 | 选中小狼毫输入源，重启 Windows |
+| Linux | 检查 IBus/keyd/内核；备份并复制 Rime 配置；使用系统字体、配置 IBus 面板；验证、安装 keyd 配置；启用并重载服务 | 在桌面添加 IBus 的 Rime 输入源；设置 IBus 为输入法框架；重新部署/重启 IBus |
+| macOS | 检查鼠须管和 Karabiner 安装；备份并复制 Rime 配置和 Karabiner 规则模板；使用系统字体 | 授予 Karabiner 所需权限、启用三条规则、添加鼠须管输入源并重新部署 |
 
-只复制输入法配置、不安装字体、不操作桌面设置和系统改键时：
+只复制输入法配置、不操作桌面设置和系统改键时：
 
 ```sh
 uv run setup.py --apply --config-only
@@ -91,7 +91,7 @@ uv run setup.py --apply --config-only
 
 非默认用户目录可加 `--rime-dir "实际用户目录"`。预览和 `--config-only` 可用于排查，不需要安装全部前端依赖。目录中不属于仓库管理范围的文件保持原样；本机 `user.yaml`、`installation.yaml`、学习词库和构建缓存不复制。
 
-主文字 16 pt、中文霞鹜文楷和英文 Noto Sans 的具体范围、Linux 桌面面板限制、独立安装和回退见 [外观与共享状态](appearance.md)。字体列表缓存未更新时需重启输入法前端。
+主文字 16 pt，各平台使用系统字体，不依赖额外字体下载。Linux 缺少中文字形时先通过发行版包管理器安装中文字体包。字体选择、桌面面板限制和设置回退见 [外观与共享状态](appearance.md)；外观未刷新时需重启输入法前端。
 
 ### 输入源只使用 Rime
 
@@ -121,11 +121,11 @@ Linux 和 macOS 的桌面端到端行为尚未实机验证。自动化测试验�
 uv run setup.py --restore-config "那次备份目录/manifest.json"
 ```
 
-恢复会先核对所有相关文件；存在后续编辑就停止，避免覆盖。它只恢复文件，不重启前端、不卸载字体、不恢复 IBus 桌面偏好、不撤销系统改键，也不关闭 Karabiner 已启用的规则。新安装的软件也不会被卸载。
+恢复会先核对所有相关文件；存在后续编辑就停止，避免覆盖。它只恢复文件，不重启前端、不恢复 IBus 桌面偏好、不撤销系统改键，也不关闭 Karabiner 已启用的规则。新安装的软件也不会被卸载。
 
 - Windows 的系统改键备份在同一目录的 `keyboard-windows.json`，用 `platforms/windows/keyboard.ps1 -Action Undo -BackupPath ...` 回退，再重启。若映射原本已完全一致，脚本没有改注册表，也不会产生该文件。
 - Linux 的旧 keyd 配置保存为 `keyd-before.conf`，`keyd-backup.json` 记录之前是否存在。恢复旧文件；之前不存在则只删除 `/etc/keyd/rime-flypy.conf`，然后 `sudo keyd reload`。
-- IBus 面板/输入源偏好的旧值保存在 `appearance.json`，使用 `uv run appearance.py --restore-linux-settings "备份目录/appearance.json"` 恢复。已安装字体保留。
+- IBus 面板/输入源偏好的旧值保存在 `appearance.json`，使用 `uv run appearance.py --restore-linux-settings "备份目录/appearance.json"` 恢复。
 - macOS 在 Karabiner 中禁用这三条规则。恢复资产 JSON 文件本身不会停用已启用的规则。
 
 撤掉右 Alt 中文入口之前，应确保左 Shift 已恢复为 `commit_code` 或另有可用的中文入口。

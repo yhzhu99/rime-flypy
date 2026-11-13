@@ -75,12 +75,12 @@ class SetupTests(unittest.TestCase):
 
     def test_config_only_apply_never_calls_platform_tools(self):
         with patch.object(setup, 'preflight') as preflight, patch.object(setup, 'finish_platform') as finish, \
-                patch.object(setup.appearance, 'prepare') as fonts:
+                patch.object(setup.appearance, 'prepare') as desktop:
             with contextlib.redirect_stdout(io.StringIO()):
                 setup.main(['--apply', '--config-only', '--rime-dir', str(self.target), '--backup-dir', str(self.backups)])
             preflight.assert_not_called()
             finish.assert_not_called()
-            fonts.assert_not_called()
+            desktop.assert_not_called()
         self.assertTrue((self.target / 'lua/key.lua').is_file())
         self.assertFalse((self.target / 'user.yaml').exists())
 

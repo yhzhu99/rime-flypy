@@ -13,7 +13,7 @@ uv run setup.py --apply  # 备份、部署 Rime 和对应平台的改键配置
 
 Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/内核安装脚本；macOS 使用鼠须管 + Karabiner。首次输入源选择、macOS 权限与规则启用、Windows 重启仍须手动完成，详见指南中的自动化范围表。统一用 uv 管理运行环境，`.python-version` 固定 Python 3.14 系列。Python 只用于安装配置，不常驻运行。
 
-候选栏统一横排：**中文霞鹜文楷、英文 Noto Sans，主字号 16 pt**，Windows/macOS 使用同一浅色配色。安装入口会安装经过散列验证的用户字体；Linux 的原生桌面面板限制及独立字体入口见 [外观与共享状态](docs/appearance.md)。
+候选栏统一横排，**主字号 16 pt，使用各平台系统自带字体**：Windows 微软雅黑/Segoe UI、macOS 苹方/Helvetica Neue，Linux 使用 Sans 和系统中文回退。Windows/macOS 使用同一浅色配色，安装入口不额外下载或安装字体；Linux 面板设置与平台限制见 [外观与共享状态](docs/appearance.md)。
 
 ## 最终键位约定
 
@@ -64,7 +64,7 @@ Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不�
 - `squirrel.custom.yaml`：macOS 的横排候选、清浅（paper_light）配色和应用选项。清除上游应用专用中英文/Vim 模式，仅保留显示兼容选项；语言状态由共用 Lua 同步。
 - `platforms/`：系统改键配置及 Windows 的预览、应用、回退脚本。
 - `setup.py`：跨平台配置入口，默认预览，支持备份、只部署配置和受保护的文件回退。
-- `appearance.py`、`fonts.json`：固定版本/散列的用户字体安装、IBus 面板偏好与受保护的桌面设置回退。
+- `appearance.py`：标准 IBus 面板的 Sans 16 字体偏好、横排、全局输入引擎与受保护的桌面设置回退；不安装字体。
 - `tests/`：平台配置检查、Windows 映射行为检查、真实 librime 输入行为测试。
 
 只同步这些配置文件。`build/`、`installation.yaml`、`user.yaml`、日志、同步缓存和学习用户词库不纳入版本控制。本次保留已有静态词库，没有新增本机学习记录。

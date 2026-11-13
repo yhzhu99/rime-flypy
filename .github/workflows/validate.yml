@@ -18,19 +18,47 @@ jobs:
       - run: uv run --with-requirements tests/requirements.txt python -m unittest discover -s tests -p "test_*.py" -v
       - name: Preview setup without changing the runner
         run: uv run setup.py --config-only --rime-dir "${{ runner.temp }}/rime-preview"
-      - name: Preview font setup without changing the runner
+      - name: Preview system-font desktop preferences without changing the runner
         run: uv run appearance.py
-      - name: Install verified user-local fonts on disposable Windows and macOS runners
+      - name: Confirm Windows and macOS appearance setup installs nothing
         if: runner.os != 'Linux'
         run: uv run appearance.py --apply
-      - name: Exercise Linux fonts and real IBus settings in a temporary desktop bus
+      - name: Verify Windows system font availability and glyphs
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          Add-Type -AssemblyName PresentationCore
+          $families = @([System.Windows.Media.Fonts]::SystemFontFamilies | ForEach-Object { $_.Source })
+          foreach ($entry in @(@('Segoe UI', 0x0041), @('Microsoft YaHei', 0x4e2d))) {
+            if ($families -notcontains $entry[0]) { throw "Missing system font: $($entry[0])" }
+            $face = New-Object System.Windows.Media.Typeface($entry[0])
+            $glyph = $null
+            if (-not $face.TryGetGlyphTypeface([ref]$glyph)) { throw "Cannot load system font: $($entry[0])" }
+            if (-not $glyph.CharacterToGlyphMap.ContainsKey([int]$entry[1])) { throw "Missing expected glyph: $($entry[0])" }
+          }
+      - name: Verify macOS system font families and glyphs
+        if: runner.os == 'macOS'
+        run: |
+          swift - <<'SWIFT'
+          import AppKit
+          for (family, sample) in [("Helvetica Neue", "A"), ("PingFang SC", "中")] {
+            let descriptor = NSFontDescriptor(fontAttributes: [.family: family, .face: "Regular"])
+            guard let font = NSFont(descriptor: descriptor, size: 16), font.familyName == family else {
+              fatalError("System font unavailable: \(family)")
+            }
+            precondition(font.coveredCharacterSet.isSuperset(of: CharacterSet(charactersIn: sample)))
+          }
+          SWIFT
+      - name: Exercise Linux system fallback and real IBus settings in a temporary desktop bus
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ibus fontconfig dbus-x11
+          sudo apt-get install -y --no-install-recommends ibus fontconfig dbus-x11 fonts-noto-cjk
           dbus-run-session -- uv run appearance.py --apply
-          fc-match -f '%{family}\n' 'Noto Sans,LXGW WenKai:charset=0041' | grep -F 'Noto Sans'
-          fc-match -f '%{family}\n' 'Noto Sans,LXGW WenKai:charset=4e2d' | grep -F 'LXGW WenKai'
+          for glyph in 0041 4e2d; do
+            matched=$(fc-match -f '%{file}\n' "Sans:charset=$glyph")
+            fc-list ":charset=$glyph" -f '%{file}\n' | grep -Fx "$matched"
+          done
       - name: Windows map merge and preservation tests
         if: runner.os == 'Windows'
         shell: powershell

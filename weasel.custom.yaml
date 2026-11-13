@@ -23,9 +23,9 @@ patch:
       text_color: 0x312A25
   style:
     color_scheme: paper_light
-    font_face: "Noto Sans, LXGW WenKai"
-    label_font_face: "Noto Sans, LXGW WenKai"
-    comment_font_face: "Noto Sans, LXGW WenKai"
+    font_face: "Segoe UI, Microsoft YaHei"
+    label_font_face: "Segoe UI, Microsoft YaHei"
+    comment_font_face: "Segoe UI, Microsoft YaHei"
     font_point: 16
     label_font_point: 12
     comment_font_point: 13

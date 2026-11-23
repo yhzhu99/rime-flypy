@@ -18,7 +18,8 @@ preset_keys:
   flypy_semicolon: {label: "；", send: semicolon, functional: false}
   flypy_reverse: {label: "`", text: "{`}", functional: false}
   flypy_cancel: {label: "清码", text: "{Escape}"}
-  flypy_period: {label: "。", text: "{.}"}
+  flypy_comma: {label: "，", text: "{,}", functional: false}
+  flypy_period: {label: "。", text: "{.}", functional: false}
   flypy_to_english: {label: "英", send: Eisu_toggle, select: english}
   flypy_commit_code_to_english: {label: "英", text: "{Return}{flypy_to_english}"}
   flypy_to_chinese: {label: "中", send: Eisu_toggle, select: default}
@@ -60,7 +61,7 @@ preset_keyboards:
         width: 12
         name: english
         preview: false
-      - {click: text_halfcomma, swipe_up: flypy_period, swipe_down: commit_half_comma, long_click: [flypy_period, commit_half_dot, "？", "！"], width: 11, name: punctuation, preview: false}
+      - {click: flypy_comma, swipe_up: flypy_period, swipe_down: commit_half_comma, long_click: [flypy_period, commit_half_dot, "？", "！"], functional: false, width: 11, name: punctuation, preview: false}
       - {click: space, swipe_up: *to_english, width: 36, name: space, preview: false}
       - click:
           - {when: normal, send: flypy_semicolon}

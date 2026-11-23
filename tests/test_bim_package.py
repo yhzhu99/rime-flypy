@@ -71,9 +71,11 @@ class BimPackageTests(unittest.TestCase):
         for page in ('number', 'symbols'):
             self.assertEqual(theme['preset_keyboards']['__patch'][f'{page}/keys/@last/swipe_up'], 'next')
         chinese = theme['preset_keyboards']['default']['keys/+']
-        self.assertEqual(chinese[2]['click'], 'text_halfcomma')
-        self.assertEqual(chinese[2]['swipe_up'], 'flypy_period')
-        self.assertEqual(theme['preset_keys']['flypy_period']['label'], '。')
+        self.assertIs(chinese[2]['functional'], False)
+        for gesture, symbol, event in (('click', '，', '{,}'), ('swipe_up', '。', '{.}')):
+            self.assertEqual(theme['preset_keys'][chinese[2][gesture]], {
+                'label': symbol, 'text': event, 'functional': False,
+            })
         english = theme['preset_keyboards']['english']['keys/+']
         self.assertEqual((english[2]['click'], english[4]['click']), ('commit_half_comma', 'commit_half_dot'))
         self.assertTrue(all('swipe_up' not in english[index] for index in (2, 4)))

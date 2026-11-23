@@ -14,7 +14,7 @@ preset_color_schemes:
 preset_keys:
   __include: ./../public/preset_keys/default:/preset_keys
   __patch:
-    commit_half_tilde_no_functional: {label: "半角~", text: "{asciitilde}", functional: false}
+    commit_half_tilde_no_functional: {label: "~\u2060", text: "{asciitilde}", functional: false}
   flypy_semicolon: {label: "；\u2009`", send: semicolon, functional: false}
   flypy_reverse: {label: "`", text: "{`}", functional: false}
   flypy_cancel: {label: "清码", text: "{Escape}"}

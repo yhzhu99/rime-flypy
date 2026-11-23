@@ -139,7 +139,7 @@ class BimPackageTests(unittest.TestCase):
         tilde_action = english['__patch'][f'{tilde_path}/swipe_up']
         self.assertEqual(tilde_action, 'commit_half_tilde_no_functional')
         self.assertEqual(theme['preset_keys']['__patch'][tilde_action], {
-            'label': '半角~', 'text': '{asciitilde}', 'functional': False,
+            'label': '~\u2060', 'text': '{asciitilde}', 'functional': False,
         })
         self.assertIs(english['__patch'][f'{tilde_path}/functional'], False)
         self.assertEqual(english['__patch'][f'{tilde_path}/long_click'], [tilde_action])

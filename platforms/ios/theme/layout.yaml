@@ -23,7 +23,7 @@ letters:
   - {click: o, label: O, swipe_up: commit_9, swipe_down: "°", long_click: [commit_9, commit_O]}
   - {click: p, label: P, swipe_up: commit_0, swipe_down: "$", long_click: [commit_0, commit_P]}
   - {width: 5}
-  - {click: a, label: A, swipe_up: "~"}
+  - {click: a, label: A, swipe_up: commit_half_tilde_no_functional}
   - {click: s, label: S, swipe_up: "/"}
   - {click: d, label: D, swipe_up: ":"}
   - {click: f, label: F, swipe_up: ";"}
@@ -39,6 +39,6 @@ letters:
   - {click: c, label: C, swipe_up: "#"}
   - {click: v, label: V, swipe_up: "?", swipe_down: "？"}
   - {click: b, label: B, swipe_up: "!", swipe_down: "！"}
-  - {click: n, label: N, swipe_up: "，", swipe_down: ","}
-  - {click: m, label: M, swipe_up: "。", swipe_down: "."}
+  - {click: n, label: N, swipe_up: flypy_equals}
+  - {click: m, label: M, swipe_up: flypy_ellipsis}
   - {click: backspace, width: 15, name: backspace, preview: false}

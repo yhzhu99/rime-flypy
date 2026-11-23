@@ -162,8 +162,12 @@ class BimPackageTests(unittest.TestCase):
         letters = yaml.safe_load(files['layout.yaml'])['letters']
         theme = yaml.safe_load(files['theme.yaml'])
         overrides = theme['preset_keyboards']['english']['__patch']
+        slash_index, slash = next((index, key) for index, key in enumerate(letters) if key.get('click') == 's')
+        self.assertEqual(slash['swipe_up'], 'commit_halfslash')
+        for page in ('default', 'english'):
+            self.assertNotIn(f'keys/@{slash_index}/swipe_up', theme['preset_keyboards'][page]['__patch'])
         for letter, gesture, chinese, english in (
-            ('s', 'swipe_up', 'flypy_dun', 'commit_halfslash'), ('d', 'swipe_up', 'commit_fullcolon', ':'),
+            ('d', 'swipe_up', 'commit_fullcolon', ':'),
             ('f', 'swipe_up', 'commit_fullsemicolon', 'flypy_ascii_semicolon'),
             ('k', 'swipe_up', 'flypy_double_quotes', '"'), ('l', 'swipe_up', 'flypy_single_quotes', "'"),
             ('p', 'swipe_down', 'flypy_yuan', '$'),
@@ -174,7 +178,7 @@ class BimPackageTests(unittest.TestCase):
         for name, pair in (('flypy_double_quotes', '“”'), ('flypy_single_quotes', '‘’')):
             action = theme['preset_keys'][name]
             self.assertEqual((action['label'], action['text']), (pair, pair + '{Left}'))
-        for name, symbol in (('flypy_dun', '、'), ('flypy_yuan', '￥'), ('flypy_percent', '%'),
+        for name, symbol in (('flypy_yuan', '￥'), ('flypy_percent', '%'),
                              ('flypy_asterisk', '*'), ('flypy_backslash', '\\')):
             action = theme['preset_keys'][name]
             self.assertEqual((action['label'], action['commit']), (symbol, symbol))

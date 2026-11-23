@@ -24,7 +24,7 @@ letters:
   - {click: p, label: P, swipe_up: commit_0, swipe_down: flypy_yuan, long_click: [commit_0, commit_P]}
   - {width: 5}
   - {click: a, label: A, swipe_up: commit_fulltilde}
-  - {click: s, label: S, swipe_up: flypy_dun}
+  - {click: s, label: S, swipe_up: commit_halfslash}
   - {click: d, label: D, swipe_up: commit_fullcolon}
   - {click: f, label: F, swipe_up: commit_fullsemicolon}
   - {click: g, label: G, swipe_up: flypy_full_parentheses, long_click: [flypy_full_left_paren, flypy_full_right_paren]}

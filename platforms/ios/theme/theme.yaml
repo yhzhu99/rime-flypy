@@ -1,4 +1,4 @@
-config_version: "1.0.14"
+config_version: "1.0.15"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -23,7 +23,6 @@ preset_keys:
   flypy_cancel: {label: "清码", text: "{Escape}"}
   flypy_comma: {label: "，", text: "{,}", functional: false}
   flypy_period: {label: "。", text: "{.}", functional: false}
-  flypy_dun: {label: "、", commit: "、", functional: false}
   flypy_yuan: {label: "￥", commit: "￥", functional: false}
   flypy_double_quotes: {label: "“”", text: "“”{Left}", functional: false}
   flypy_single_quotes: {label: "‘’", text: "‘’{Left}", functional: false}
@@ -106,7 +105,6 @@ preset_keyboards:
       keys/@11/functional: false
       keys/@11/swipe_up: commit_half_tilde_no_functional
       keys/@11/long_click: [commit_half_tilde_no_functional]
-      keys/@12/swipe_up: commit_halfslash
       keys/@13/swipe_up: ":"
       keys/@14/swipe_up: flypy_ascii_semicolon
       keys/@15/swipe_up: flypy_parentheses

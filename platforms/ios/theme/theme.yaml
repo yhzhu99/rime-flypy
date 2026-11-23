@@ -1,4 +1,4 @@
-config_version: "1.0.8"
+config_version: "1.0.9"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -18,6 +18,7 @@ preset_keys:
   flypy_cancel: {label: "清码", send: Escape}
   flypy_period: {label: "。", text: "{.}"}
   flypy_to_english: {label: "英", send: Eisu_toggle, select: english}
+  flypy_commit_code_to_english: {label: "英", text: "{Return}{flypy_to_english}"}
   flypy_to_chinese: {label: "中", send: Eisu_toggle, select: default}
   flypy_ascii_tilde: {label: "~", text: "~", functional: false}
   flypy_ascii_exclamation: {label: "!", commit: "!"}
@@ -49,9 +50,17 @@ preset_keyboards:
       __include: ./layout:/letters
     keys/+:
       - {click: eisu_toggle_123_number, swipe_up: eisu_toggle_符_symbols, width: 13, name: number, preview: false}
-      - {click: flypy_to_english, label: "中", long_click: [eisu_toggle_common_setting_board], width: 12, name: english, preview: false}
+      - click: &to_english
+          - {when: normal, send: flypy_to_english}
+          - {when: has_menu, send: flypy_commit_code_to_english}
+          - {when: composing, send: flypy_commit_code_to_english}
+        label: "中"
+        long_click: [eisu_toggle_common_setting_board]
+        width: 12
+        name: english
+        preview: false
       - {click: text_halfcomma, swipe_up: flypy_period, swipe_down: commit_half_comma, long_click: [flypy_period, commit_half_dot, "？", "！"], width: 11, name: punctuation, preview: false}
-      - {click: space, swipe_up: flypy_to_english, width: 36, name: space, preview: false}
+      - {click: space, swipe_up: *to_english, width: 36, name: space, preview: false}
       - click:
           - {when: normal, send: flypy_semicolon}
           - {when: has_menu, send: select_second}

@@ -155,6 +155,10 @@ def check_bim(session):
     send('2')
     assert ('1+2=3', '') in candidates(), candidates()
     clear(session)
+    send('n')
+    assert candidates()[0][0] == '你'
+    assert simulate(session, b'{Return}')
+    assert commit() == 'n' and not candidates()
     set_option(session, b'ascii_mode', True)
     assert process(session, ord('a'), 0) == 0
     set_option(session, b'ascii_mode', False)
@@ -164,7 +168,7 @@ def check_bim(session):
     assert not candidates() and not commit() and not get_option(session, b'ascii_mode')
     send('n ')
     assert commit() == '你'
-    print('BiM archive: words, four-code rollover, quick symbols, reverse lookup, Lua date/calculator, ASCII and cancel OK')
+    print('BiM archive: words, four-code rollover, quick symbols, reverse lookup, Lua date/calculator, raw commit, ASCII and cancel OK')
 
 
 try:

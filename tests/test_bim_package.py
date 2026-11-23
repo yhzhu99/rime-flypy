@@ -60,7 +60,8 @@ class BimPackageTests(unittest.TestCase):
             self.assertEqual(bottom[1]['label'], current_label)
             self.assertEqual(bottom[1]['long_click'], ['eisu_toggle_common_setting_board'])
             self.assertEqual(bottom[1]['click'], bottom[3]['swipe_up'])
-            action = theme['preset_keys'][bottom[1]['click']]
+            normal_action = bottom[1]['click'][0]['send'] if mode == 0 else bottom[1]['click']
+            action = theme['preset_keys'][normal_action]
             self.assertEqual((action['select'], action['label']), (target, target_label))
             self.assertEqual(bottom[-1]['swipe_up'], 'next')
         self.assertEqual(theme['preset_fonts']['default']['key_upper_text_size'], 11)
@@ -95,6 +96,21 @@ class BimPackageTests(unittest.TestCase):
         self.assertNotIn('long_click', semicolon)
         reverse = theme['preset_keys'][semicolon['swipe_up']]
         self.assertEqual(reverse, {'label': '`', 'text': '{`}', 'functional': False})
+
+    def test_switch_to_english_commits_literal_code_before_changing_keyboard(self):
+        files = package.bundle_files()['flypy-ios']
+        theme = yaml.safe_load(files['theme.yaml'])
+        keys = {key['name']: key for key in theme['preset_keyboards']['default']['keys/+']}
+        switch = keys['english']['click']
+        self.assertEqual(switch, keys['space']['swipe_up'])
+        choices = {entry['when']: entry['send'] for entry in switch}
+        self.assertEqual(choices, {
+            'normal': 'flypy_to_english',
+            'has_menu': 'flypy_commit_code_to_english',
+            'composing': 'flypy_commit_code_to_english',
+        })
+        action = theme['preset_keys'][choices['composing']]
+        self.assertEqual(action, {'label': '英', 'text': '{Return}{flypy_to_english}'})
 
     def test_english_swipes_use_half_width_symbols(self):
         files = package.bundle_files()['flypy-ios']

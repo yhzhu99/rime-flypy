@@ -1,0 +1,64 @@
+config_version: "1.0.1"
+style:
+  __include: ./../public/style/default:/style
+preset_styles:
+  __include: ./../public/preset_styles/default:/preset_styles
+preset_candidates:
+  __include: ./../public/preset_candidates/default:/preset_candidates
+preset_fonts:
+  __include: ./../public/preset_fonts/default:/preset_fonts
+  default:
+    key_upper_text_size: 11
+preset_color_schemes:
+  __include: ./../public/preset_color_schemes/default:/preset_color_schemes
+preset_keys:
+  __include: ./../public/preset_keys/default:/preset_keys
+  flypy_semicolon: {label: "；", send: semicolon}
+  flypy_reverse: {label: "反查", send: grave}
+  flypy_cancel: {label: "清码", send: Escape}
+  flypy_period: {label: "。", text: "{.}"}
+  flypy_to_english: {label: "英", send: Eisu_toggle, select: english}
+  flypy_to_chinese: {label: "中", send: Eisu_toggle, select: default}
+  flypy_ascii_exclamation: {label: "!", commit: "!"}
+  flypy_ascii_semicolon: {label: ";", commit: ";"}
+preset_keyboards:
+  __include: ./../public/preset_keyboards/default:/preset_keyboards
+  __patch:
+    number/keys/@last/swipe_up: next
+    symbols/keys/@last/swipe_up: next
+  default:
+    __include: ./layout:/geometry
+    name: default
+    ascii_mode: 0
+    keys:
+      __include: ./layout:/letters
+    keys/+:
+      - {click: eisu_toggle_123_number, swipe_up: eisu_toggle_符_symbols, width: 13, name: number, preview: false}
+      - {click: eisu_toggle_ABC_english, width: 12, name: english, preview: false}
+      - {click: space, swipe_up: flypy_to_english, width: 36, name: space, preview: false}
+      - {click: text_halfcomma, swipe_up: flypy_period, swipe_down: commit_half_comma, long_click: [flypy_period, commit_half_dot, "？", "！", "、", "……"], width: 11, name: punctuation, preview: false}
+      - {click: flypy_semicolon, has_menu: select_second, swipe_up: flypy_reverse, long_click: [flypy_reverse, flypy_cancel], width: 11, name: secondary, preview: false}
+      - {click: return, composing: confirm, swipe_up: next, width: 17, name: return, preview: false}
+  english:
+    __include: ./layout:/geometry
+    name: english
+    ascii_mode: 1
+    lock: true
+    keys:
+      __include: ./layout:/letters
+    keys/+:
+      - {click: eisu_toggle_123_number, swipe_up: eisu_toggle_符_symbols, width: 13, name: number, preview: false}
+      - {click: eisu_toggle_中_default, width: 12, name: english, preview: false}
+      - {click: space, swipe_up: flypy_to_chinese, width: 36, name: space, preview: false}
+      - {click: commit_half_comma, swipe_up: commit_half_dot, long_click: [commit_half_comma, commit_half_dot, commit_half_questionmark, flypy_ascii_exclamation], width: 11, name: punctuation, preview: false}
+      - {click: commit_half_dot, swipe_up: flypy_ascii_semicolon, width: 11, name: secondary, preview: false}
+      - {click: return, swipe_up: next, width: 17, name: return, preview: false}
+    __patch:
+      keys/@25/swipe_up: commit_half_questionmark
+      keys/@25/swipe_down: commit_half_questionmark
+      keys/@26/swipe_up: flypy_ascii_exclamation
+      keys/@26/swipe_down: flypy_ascii_exclamation
+      keys/@27/swipe_up: commit_half_comma
+      keys/@27/swipe_down: commit_half_comma
+      keys/@28/swipe_up: commit_half_dot
+      keys/@28/swipe_down: commit_half_dot

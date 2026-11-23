@@ -12,16 +12,28 @@ import time
 sys.stdout.reconfigure(encoding='utf-8')
 
 root = Path(__file__).resolve().parent.parent
-if len(sys.argv) != 3:
-    raise SystemExit("Usage: python tests/librime_behavior.py LIBRIME_LIBRARY SHARED_DATA_DIR")
+if len(sys.argv) not in (3, 4) or (len(sys.argv) == 4 and sys.argv[3] != '--bim'):
+    raise SystemExit("Usage: python tests/librime_behavior.py LIBRIME_LIBRARY SHARED_DATA_DIR [--bim]")
 dll_path = Path(sys.argv[1]).resolve()
 shared_dir = Path(sys.argv[2]).resolve()
 sandbox = tempfile.TemporaryDirectory(prefix="rime-flypy-test-")
 user_dir = Path(sandbox.name)
-for source in root.glob("*.yaml"):
-    shutil.copy2(source, user_dir / source.name)
-for directory in ("flypy", "lua"):
-    shutil.copytree(root / directory, user_dir / directory)
+bim = len(sys.argv) == 4
+if bim:
+    from zipfile import ZipFile
+
+    sys.path.insert(0, str(root))
+    from platforms.ios.package import build_archives
+
+    schema_zip = next(build_archives(user_dir))
+    with ZipFile(schema_zip) as archive:
+        archive.extractall(user_dir / 'schema')
+    user_dir = user_dir / 'schema/flypy'
+else:
+    for source in root.glob("*.yaml"):
+        shutil.copy2(source, user_dir / source.name)
+    for directory in ("flypy", "lua"):
+        shutil.copytree(root / directory, user_dir / directory)
 if os.name == "nt":
     dll_directory = os.add_dll_directory(str(dll_path.parent))
 dll = c.CDLL(str(dll_path))
@@ -92,10 +104,74 @@ initialize(c.byref(traits))
 
 
 results=[]
+
+
+def check_bim(session):
+    def send(sequence):
+        for char in sequence:
+            process(session, ord(char), 0)
+
+    def candidates():
+        context = Context()
+        context.data_size = c.sizeof(Context) - c.sizeof(c.c_int)
+        assert get_context(session, c.byref(context))
+        try:
+            return [(item.text.decode(), item.comment.decode() if item.comment else '')
+                    for item in context.menu.candidates[:context.menu.num_candidates]]
+        finally:
+            free_context(c.byref(context))
+
+    def commit():
+        value = Commit()
+        value.data_size = c.sizeof(Commit) - c.sizeof(c.c_int)
+        if not get_commit(session, c.byref(value)):
+            return ''
+        try:
+            return value.text.decode()
+        finally:
+            free_commit(c.byref(value))
+
+    send('nihc ')
+    assert commit() == '你好'
+    send('xhyxn')
+    assert commit() == '小鹤音形'
+    send(' ')
+    assert commit() == '你'
+    send(';w ')
+    assert commit() == '？'
+    send('n')
+    second, _ = candidates()[1]
+    send(';')
+    assert commit() == second
+    send('`irx')
+    assert any(text == '你' and 'nirx' in comment for text, comment in candidates()), candidates()
+    clear(session)
+    send('orq')
+    assert any(re.fullmatch(r'\d{4}年\d{2}月\d{2}日', text) for text, comment in candidates())
+    clear(session)
+    send('=1+')
+    assert not candidates()
+    send('2')
+    assert ('1+2=3', '') in candidates(), candidates()
+    clear(session)
+    set_option(session, b'ascii_mode', True)
+    assert process(session, ord('a'), 0) == 0
+    set_option(session, b'ascii_mode', False)
+    send('n')
+    process(session, 0xff1b, 0)
+    assert not commit() and not get_option(session, b'ascii_mode')
+    send('n ')
+    assert commit() == '你'
+    print('BiM archive: words, four-code rollover, quick symbols, reverse lookup, Lua date/calculator, ASCII and cancel OK')
+
+
 try:
     if maintain(1): join()
     sid=create()
     assert sid and select(sid,b'flypy')
+    if bim:
+        check_bim(sid)
+        sys.exit(0)
     def mode(): return bool(get_option(sid,b'ascii_mode'))
     def check(name,ok):
         assert ok,name

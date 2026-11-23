@@ -84,9 +84,14 @@ class BimPackageTests(unittest.TestCase):
         shift_index, shift = next((index, key) for index, key in enumerate(layout['letters']) if key.get('name') == 'shift')
         self.assertEqual(shift['click'], 'shift')
         self.assertNotIn('has_menu', shift)
-        candidate_action = f'keys/@{shift_index}/has_menu'
-        self.assertEqual(theme['preset_keys'][chinese['__patch'][candidate_action]]['send'], 'Escape')
-        self.assertNotIn(candidate_action, english['__patch'])
+        tap_path = f'keys/@{shift_index}/click'
+        self.assertEqual(chinese['__patch'][tap_path], [
+            {'when': 'normal', 'send': 'shift'},
+            {'when': 'has_menu', 'send': 'flypy_cancel'},
+            {'when': 'composing', 'send': 'flypy_cancel'},
+        ])
+        self.assertEqual(theme['preset_keys']['flypy_cancel'], {'label': '清码', 'text': '{Escape}'})
+        self.assertNotIn(tap_path, english['__patch'])
         semicolon = next(key for key in chinese['keys/+'] if key['name'] == 'secondary')
         self.assertEqual(semicolon['click'], [
             {'when': 'normal', 'send': 'flypy_semicolon'},

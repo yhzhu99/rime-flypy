@@ -1,4 +1,4 @@
-config_version: "1.0.10"
+config_version: "1.0.11"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -15,7 +15,7 @@ preset_keys:
   __include: ./../public/preset_keys/default:/preset_keys
   flypy_semicolon: {label: "；", send: semicolon}
   flypy_reverse: {label: "`", text: "{`}", functional: false}
-  flypy_cancel: {label: "清码", send: Escape}
+  flypy_cancel: {label: "清码", text: "{Escape}"}
   flypy_period: {label: "。", text: "{.}"}
   flypy_to_english: {label: "英", send: Eisu_toggle, select: english}
   flypy_commit_code_to_english: {label: "英", text: "{Return}{flypy_to_english}"}
@@ -69,7 +69,10 @@ preset_keyboards:
         preview: false
       - {click: return, composing: confirm, swipe_up: next, width: 17, name: return, preview: false}
     __patch:
-      keys/@21/has_menu: flypy_cancel
+      keys/@21/click:
+        - {when: normal, send: shift}
+        - {when: has_menu, send: flypy_cancel}
+        - {when: composing, send: flypy_cancel}
   english:
     __include: ./layout:/geometry
     name: english

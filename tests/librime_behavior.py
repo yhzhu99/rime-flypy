@@ -164,7 +164,7 @@ def check_bim(session):
     set_option(session, b'ascii_mode', False)
     send('n')
     assert candidates()
-    process(session, 0xff1b, 0)
+    assert simulate(session, b'{Escape}')
     assert not candidates() and not commit() and not get_option(session, b'ascii_mode')
     send('n ')
     assert commit() == '你'

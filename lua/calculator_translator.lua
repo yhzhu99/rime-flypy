@@ -395,8 +395,12 @@ local function calculator_translator(input, seg)
         return
     end
     -- return語句保證了只有合法的Lua表達式才可執行
-    local result = load("return " .. expe)()
-    if result == nil then
+    local evaluate = load("return " .. expe)
+    if not evaluate then
+        return
+    end
+    local ok, result = pcall(evaluate)
+    if not ok or result == nil then
         return
     end
 

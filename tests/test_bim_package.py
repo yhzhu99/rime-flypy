@@ -47,7 +47,6 @@ class BimPackageTests(unittest.TestCase):
         self.assertEqual(underscore['swipe_up'], 'commit_halfunderline')
         self.assertNotIn(f'keys/@{index}/swipe_up', theme['preset_keyboards']['english']['__patch'])
         self.assertEqual(theme['preset_keys']['flypy_semicolon']['send'], 'semicolon')
-        self.assertEqual(theme['preset_keys']['flypy_reverse'], {'label': '`', 'send': 'grave', 'functional': False})
         for page, mode, target, current_label, target_label in (
             ('default', 0, 'english', '中', '英'),
             ('english', 1, 'default', '英', '中'),
@@ -71,12 +70,31 @@ class BimPackageTests(unittest.TestCase):
         self.assertEqual(chinese[2]['click'], 'text_halfcomma')
         self.assertEqual(chinese[2]['swipe_up'], 'flypy_period')
         self.assertEqual(theme['preset_keys']['flypy_period']['label'], '。')
-        self.assertEqual(chinese[4]['click'], 'flypy_semicolon')
-        self.assertEqual(chinese[4]['has_menu'], 'select_second')
-        self.assertEqual(chinese[4]['swipe_up'], 'flypy_reverse')
         english = theme['preset_keyboards']['english']['keys/+']
         self.assertEqual((english[2]['click'], english[4]['click']), ('commit_half_comma', 'commit_half_dot'))
         self.assertTrue(all('swipe_up' not in english[index] for index in (2, 4)))
+
+    def test_chinese_candidates_clear_with_shift_and_keep_reverse_lookup_on_semicolon(self):
+        files = package.bundle_files()['flypy-ios']
+        layout = yaml.safe_load(files['layout.yaml'])
+        theme = yaml.safe_load(files['theme.yaml'])
+        chinese = theme['preset_keyboards']['default']
+        english = theme['preset_keyboards']['english']
+        shift_index, shift = next((index, key) for index, key in enumerate(layout['letters']) if key.get('name') == 'shift')
+        self.assertEqual(shift['click'], 'shift')
+        self.assertNotIn('has_menu', shift)
+        candidate_action = f'keys/@{shift_index}/has_menu'
+        self.assertEqual(theme['preset_keys'][chinese['__patch'][candidate_action]]['send'], 'Escape')
+        self.assertNotIn(candidate_action, english['__patch'])
+        semicolon = next(key for key in chinese['keys/+'] if key['name'] == 'secondary')
+        self.assertEqual(semicolon['click'], [
+            {'when': 'normal', 'send': 'flypy_semicolon'},
+            {'when': 'has_menu', 'send': 'select_second'},
+        ])
+        self.assertNotIn('has_menu', semicolon)
+        self.assertNotIn('long_click', semicolon)
+        reverse = theme['preset_keys'][semicolon['swipe_up']]
+        self.assertEqual(reverse, {'label': '`', 'text': '{`}', 'functional': False})
 
     def test_english_swipes_use_half_width_symbols(self):
         files = package.bundle_files()['flypy-ios']

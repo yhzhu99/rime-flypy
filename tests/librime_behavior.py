@@ -82,6 +82,7 @@ create = api('RimeCreateSession', sid_t)
 destroy = api('RimeDestroySession', c.c_int, sid_t)
 select = api('RimeSelectSchema', c.c_int, sid_t, c.c_char_p)
 process = api('RimeProcessKey', c.c_int, sid_t, c.c_int, c.c_int)
+simulate = api('RimeSimulateKeySequence', c.c_int, sid_t, c.c_char_p)
 set_option = api('RimeSetOption', None, sid_t, c.c_char_p, c.c_int)
 get_option = api('RimeGetOption', c.c_int, sid_t, c.c_char_p)
 clear = api('RimeClearComposition', None, sid_t)
@@ -143,7 +144,7 @@ def check_bim(session):
     second, _ = candidates()[1]
     send(';')
     assert commit() == second
-    send('`irx')
+    assert simulate(session, b'{`}irx')
     assert any(text == '你' and 'nirx' in comment for text, comment in candidates()), candidates()
     clear(session)
     send('orq')
@@ -158,8 +159,9 @@ def check_bim(session):
     assert process(session, ord('a'), 0) == 0
     set_option(session, b'ascii_mode', False)
     send('n')
+    assert candidates()
     process(session, 0xff1b, 0)
-    assert not commit() and not get_option(session, b'ascii_mode')
+    assert not candidates() and not commit() and not get_option(session, b'ascii_mode')
     send('n ')
     assert commit() == '你'
     print('BiM archive: words, four-code rollover, quick symbols, reverse lookup, Lua date/calculator, ASCII and cancel OK')

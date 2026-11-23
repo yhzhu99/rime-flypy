@@ -1,4 +1,4 @@
-config_version: "1.0.7"
+config_version: "1.0.8"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -14,7 +14,7 @@ preset_color_schemes:
 preset_keys:
   __include: ./../public/preset_keys/default:/preset_keys
   flypy_semicolon: {label: "；", send: semicolon}
-  flypy_reverse: {label: "`", send: grave, functional: false}
+  flypy_reverse: {label: "`", text: "{`}", functional: false}
   flypy_cancel: {label: "清码", send: Escape}
   flypy_period: {label: "。", text: "{.}"}
   flypy_to_english: {label: "英", send: Eisu_toggle, select: english}
@@ -52,8 +52,16 @@ preset_keyboards:
       - {click: flypy_to_english, label: "中", long_click: [eisu_toggle_common_setting_board], width: 12, name: english, preview: false}
       - {click: text_halfcomma, swipe_up: flypy_period, swipe_down: commit_half_comma, long_click: [flypy_period, commit_half_dot, "？", "！"], width: 11, name: punctuation, preview: false}
       - {click: space, swipe_up: flypy_to_english, width: 36, name: space, preview: false}
-      - {click: flypy_semicolon, has_menu: select_second, swipe_up: flypy_reverse, long_click: [flypy_reverse, flypy_cancel], width: 11, name: secondary, preview: false}
+      - click:
+          - {when: normal, send: flypy_semicolon}
+          - {when: has_menu, send: select_second}
+        swipe_up: flypy_reverse
+        width: 11
+        name: secondary
+        preview: false
       - {click: return, composing: confirm, swipe_up: next, width: 17, name: return, preview: false}
+    __patch:
+      keys/@21/has_menu: flypy_cancel
   english:
     __include: ./layout:/geometry
     name: english

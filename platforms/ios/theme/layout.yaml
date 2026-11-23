@@ -15,7 +15,7 @@ letters:
   - {click: q, label: Q, swipe_up: commit_1, swipe_down: flypy_percent, long_click: [commit_1, commit_Q]}
   - {click: w, label: W, swipe_up: commit_2, swipe_down: "+", long_click: [commit_2, commit_W]}
   - {click: e, label: E, swipe_up: commit_3, swipe_down: flypy_asterisk, long_click: [commit_3, commit_E]}
-  - {click: r, label: R, swipe_up: commit_4, swipe_down: "&", long_click: [commit_4, commit_R]}
+  - {click: r, label: R, swipe_up: commit_4, swipe_down: flypy_ampersand, long_click: [commit_4, commit_R]}
   - {click: t, label: T, swipe_up: commit_5, swipe_down: "±", long_click: [commit_5, commit_T]}
   - {click: y, label: Y, swipe_up: commit_6, swipe_down: "×", long_click: [commit_6, commit_Y]}
   - {click: u, label: U, swipe_up: commit_7, swipe_down: flypy_backslash, long_click: [commit_7, commit_U]}
@@ -40,5 +40,5 @@ letters:
   - {click: v, label: V, swipe_up: commit_fullquestionmark, swipe_down: commit_fullquestionmark}
   - {click: b, label: B, swipe_up: commit_fullexclamationpoint, swipe_down: commit_fullexclamationpoint}
   - {click: n, label: N, swipe_up: flypy_equals}
-  - {click: m, label: M, swipe_up: flypy_pipe}
+  - {click: m, label: M, swipe_up: flypy_ampersand}
   - {click: backspace, width: 15, name: backspace, preview: false}

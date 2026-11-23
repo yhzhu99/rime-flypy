@@ -189,16 +189,20 @@ class BimPackageTests(unittest.TestCase):
         files = package.bundle_files()['flypy-ios']
         layout = yaml.safe_load(files['layout.yaml'])
         theme = yaml.safe_load(files['theme.yaml'])
-        english = theme['preset_keyboards']['english']['__patch']
-        expected = {'n': '=', 'm': '|'}
+        expected = {'n': '=', 'm': '&'}
         indexed = {key.get('click'): (index, key) for index, key in enumerate(layout['letters'])}
         for letter, symbol in expected.items():
             index, key = indexed[letter]
             self.assertNotIn('swipe_down', key)
-            self.assertNotIn(f'keys/@{index}/swipe_down', english)
-            self.assertNotIn(f'keys/@{index}/swipe_up', english)
-            preset = theme['preset_keys'][key['swipe_up']]
-            self.assertEqual((preset['label'], preset['commit']), (symbol, symbol))
+            for page in ('default', 'english'):
+                overrides = theme['preset_keyboards'][page]['__patch']
+                self.assertNotIn(f'keys/@{index}/swipe_down', overrides)
+                swipe = overrides.get(f'keys/@{index}/swipe_up', key['swipe_up'])
+                preset = theme['preset_keys'][swipe]
+                self.assertEqual((preset['label'], preset['commit']), (symbol, symbol))
+                if letter == 'm':
+                    r_index, r_key = indexed['r']
+                    self.assertEqual(overrides.get(f'keys/@{r_index}/swipe_down', r_key['swipe_down']), swipe)
 
     def test_bracket_gestures_use_punctuation_for_the_current_language(self):
         files = package.bundle_files()['flypy-ios']

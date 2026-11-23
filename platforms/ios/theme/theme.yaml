@@ -1,4 +1,4 @@
-config_version: "1.0.15"
+config_version: "1.0.16"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -35,7 +35,7 @@ preset_keys:
   flypy_ascii_exclamation: {label: "!", commit: "!"}
   flypy_ascii_semicolon: {label: ";", commit: ";"}
   flypy_equals: {label: "=", commit: "="}
-  flypy_pipe: {label: "|", commit: "|"}
+  flypy_ampersand: {label: "&", commit: "&", functional: false}
   flypy_parentheses: {label: "()", text: "(){Left}"}
   flypy_brackets: {label: "[]", text: "[]{Left}"}
   flypy_left_paren: {label: "(", commit: "("}

@@ -30,6 +30,9 @@ class BimPackageTests(unittest.TestCase):
                 for name in ('flypy', 'flypydz'):
                     desktop = yaml.safe_load((package.ROOT / f'{name}.schema.yaml').read_bytes())
                     desktop['engine']['processors'].remove('lua_processor@*language_keys')
+                    if name == 'flypy':
+                        desktop['engine']['processors'].insert(0, 'lua_processor@*ios_ascii_tilde')
+                        self.assertIn('flypy/lua/ios_ascii_tilde.lua', schema.namelist())
                     self.assertEqual(yaml.safe_load(schema.read(f'flypy/{name}.schema.yaml')), desktop)
                 for path in package.ROOT.glob('lua/*.lua'):
                     if path.name != 'language_keys.lua':
@@ -68,9 +71,11 @@ class BimPackageTests(unittest.TestCase):
         for page in ('number', 'symbols'):
             self.assertEqual(theme['preset_keyboards']['__patch'][f'{page}/keys/@last/swipe_up'], 'next')
         chinese = theme['preset_keyboards']['default']['keys/+']
-        self.assertEqual(chinese[2]['click'], 'text_halfcomma')
-        self.assertEqual(chinese[2]['swipe_up'], 'flypy_period')
-        self.assertEqual(theme['preset_keys']['flypy_period']['label'], '。')
+        self.assertIs(chinese[2]['functional'], False)
+        for gesture, symbol, event in (('click', '，', '{,}'), ('swipe_up', '。', '{.}')):
+            self.assertEqual(theme['preset_keys'][chinese[2][gesture]], {
+                'label': symbol, 'text': event, 'functional': False,
+            })
         english = theme['preset_keyboards']['english']['keys/+']
         self.assertEqual((english[2]['click'], english[4]['click']), ('commit_half_comma', 'commit_half_dot'))
         self.assertTrue(all('swipe_up' not in english[index] for index in (2, 4)))
@@ -84,9 +89,14 @@ class BimPackageTests(unittest.TestCase):
         shift_index, shift = next((index, key) for index, key in enumerate(layout['letters']) if key.get('name') == 'shift')
         self.assertEqual(shift['click'], 'shift')
         self.assertNotIn('has_menu', shift)
-        candidate_action = f'keys/@{shift_index}/has_menu'
-        self.assertEqual(theme['preset_keys'][chinese['__patch'][candidate_action]]['send'], 'Escape')
-        self.assertNotIn(candidate_action, english['__patch'])
+        tap_path = f'keys/@{shift_index}/click'
+        self.assertEqual(chinese['__patch'][tap_path], [
+            {'when': 'normal', 'send': 'shift'},
+            {'when': 'has_menu', 'send': 'flypy_cancel'},
+            {'when': 'composing', 'send': 'flypy_cancel'},
+        ])
+        self.assertEqual(theme['preset_keys']['flypy_cancel'], {'label': '清码', 'text': '{Escape}'})
+        self.assertNotIn(tap_path, english['__patch'])
         semicolon = next(key for key in chinese['keys/+'] if key['name'] == 'secondary')
         self.assertEqual(semicolon['click'], [
             {'when': 'normal', 'send': 'flypy_semicolon'},
@@ -94,6 +104,10 @@ class BimPackageTests(unittest.TestCase):
         ])
         self.assertNotIn('has_menu', semicolon)
         self.assertNotIn('long_click', semicolon)
+        self.assertIs(semicolon['functional'], False)
+        normal = theme['preset_keys'][semicolon['click'][0]['send']]
+        self.assertEqual(normal['label'], '；')
+        self.assertIs(normal['functional'], False)
         reverse = theme['preset_keys'][semicolon['swipe_up']]
         self.assertEqual(reverse, {'label': '`', 'text': '{`}', 'functional': False})
 
@@ -117,8 +131,8 @@ class BimPackageTests(unittest.TestCase):
         layout = yaml.safe_load(files['layout.yaml'])
         theme = yaml.safe_load(files['theme.yaml'])
         expected = {
-            'v': ('？', 'commit_half_questionmark'),
-            'b': ('！', 'flypy_ascii_exclamation'),
+            'v': ('commit_fullquestionmark', 'commit_half_questionmark'),
+            'b': ('commit_fullexclamationpoint', 'flypy_ascii_exclamation'),
         }
         english = theme['preset_keyboards']['english']
         tilde_index, tilde_key = next((index, key) for index, key in enumerate(layout['letters']) if key.get('click') == 'a')
@@ -126,34 +140,69 @@ class BimPackageTests(unittest.TestCase):
         tilde_path = f'keys/@{tilde_index}'
         tilde_action = english['__patch'][f'{tilde_path}/swipe_up']
         self.assertEqual(tilde_action, 'commit_half_tilde_no_functional')
+        self.assertEqual(theme['preset_keys']['__patch'][tilde_action], {
+            'label': '~\u2060', 'text': '{asciitilde}', 'functional': False,
+        })
         self.assertIs(english['__patch'][f'{tilde_path}/functional'], False)
         self.assertEqual(english['__patch'][f'{tilde_path}/long_click'], [tilde_action])
         for index, key in enumerate(layout['letters']):
             if key.get('click') not in expected:
                 continue
             full_width, action = expected[key['click']]
-            self.assertIn(full_width, (key['swipe_up'], key['swipe_down']))
             for direction in ('swipe_up', 'swipe_down'):
+                self.assertEqual(key[direction], full_width)
                 self.assertEqual(english['__patch'][f'keys/@{index}/{direction}'], action)
         semicolon_index = next(index for index, key in enumerate(layout['letters']) if key.get('click') == 'f')
         self.assertEqual(english['__patch'][f'keys/@{semicolon_index}/swipe_up'], 'flypy_ascii_semicolon')
         for action, symbol in (('flypy_ascii_exclamation', '!'), ('flypy_ascii_semicolon', ';')):
             self.assertEqual(theme['preset_keys'][action]['commit'], symbol)
 
+    def test_punctuation_legends_follow_the_current_page(self):
+        files = package.bundle_files()['flypy-ios']
+        letters = yaml.safe_load(files['layout.yaml'])['letters']
+        theme = yaml.safe_load(files['theme.yaml'])
+        overrides = theme['preset_keyboards']['english']['__patch']
+        slash_index, slash = next((index, key) for index, key in enumerate(letters) if key.get('click') == 's')
+        self.assertEqual(slash['swipe_up'], 'commit_halfslash')
+        for page in ('default', 'english'):
+            self.assertNotIn(f'keys/@{slash_index}/swipe_up', theme['preset_keyboards'][page]['__patch'])
+        for letter, gesture, chinese, english in (
+            ('d', 'swipe_up', 'commit_fullcolon', ':'),
+            ('f', 'swipe_up', 'commit_fullsemicolon', 'flypy_ascii_semicolon'),
+            ('k', 'swipe_up', 'flypy_double_quotes', '"'), ('l', 'swipe_up', 'flypy_single_quotes', "'"),
+            ('p', 'swipe_down', 'flypy_yuan', '$'),
+        ):
+            index, key = next((index, key) for index, key in enumerate(letters) if key.get('click') == letter)
+            self.assertEqual(key[gesture], chinese)
+            self.assertEqual(overrides[f'keys/@{index}/{gesture}'], english)
+        for name, pair in (('flypy_double_quotes', '“”'), ('flypy_single_quotes', '‘’')):
+            action = theme['preset_keys'][name]
+            self.assertEqual((action['label'], action['text']), (pair, pair + '{Left}'))
+        for name, symbol in (('flypy_yuan', '￥'), ('flypy_percent', '%'),
+                             ('flypy_asterisk', '*'), ('flypy_backslash', '\\')):
+            action = theme['preset_keys'][name]
+            self.assertEqual((action['label'], action['commit']), (symbol, symbol))
+        for style in ('light_sm_md', 'dark_sm_md'):
+            self.assertEqual(theme['preset_styles']['__patch'][f'{style}/keyboards'], ['default', 'english', 'number', 'symbols'])
+
     def test_nm_swipes_add_symbols_instead_of_repeating_punctuation(self):
         files = package.bundle_files()['flypy-ios']
         layout = yaml.safe_load(files['layout.yaml'])
         theme = yaml.safe_load(files['theme.yaml'])
-        english = theme['preset_keyboards']['english']['__patch']
-        expected = {'n': '=', 'm': '|'}
+        expected = {'n': '=', 'm': '&'}
         indexed = {key.get('click'): (index, key) for index, key in enumerate(layout['letters'])}
         for letter, symbol in expected.items():
             index, key = indexed[letter]
             self.assertNotIn('swipe_down', key)
-            self.assertNotIn(f'keys/@{index}/swipe_down', english)
-            self.assertNotIn(f'keys/@{index}/swipe_up', english)
-            preset = theme['preset_keys'][key['swipe_up']]
-            self.assertEqual((preset['label'], preset['commit']), (symbol, symbol))
+            for page in ('default', 'english'):
+                overrides = theme['preset_keyboards'][page]['__patch']
+                self.assertNotIn(f'keys/@{index}/swipe_down', overrides)
+                swipe = overrides.get(f'keys/@{index}/swipe_up', key['swipe_up'])
+                preset = theme['preset_keys'][swipe]
+                self.assertEqual((preset['label'], preset['commit']), (symbol, symbol))
+                if letter == 'm':
+                    r_index, r_key = indexed['r']
+                    self.assertEqual(overrides.get(f'keys/@{r_index}/swipe_down', r_key['swipe_down']), swipe)
 
     def test_bracket_gestures_use_punctuation_for_the_current_language(self):
         files = package.bundle_files()['flypy-ios']

@@ -25,7 +25,7 @@ if bim:
     sys.path.insert(0, str(root))
     from platforms.ios.package import build_archives
 
-    schema_zip = next(build_archives(user_dir))
+    schema_zip, theme_zip = build_archives(user_dir)
     with ZipFile(schema_zip) as archive:
         archive.extractall(user_dir / 'schema')
     user_dir = user_dir / 'schema/flypy'
@@ -161,10 +161,18 @@ def check_bim(session):
     assert commit() == 'n' and not candidates()
     set_option(session, b'ascii_mode', True)
     assert process(session, ord('a'), 0) == 0
+    with ZipFile(theme_zip) as theme:
+        import yaml
+
+        config = yaml.safe_load(theme.read('flypy-ios/theme.yaml'))
+    tilde_event = config['preset_keys']['__patch']['commit_half_tilde_no_functional']['text']
+    assert simulate(session, tilde_event.encode('ascii'))
+    assert commit() == '~' and not candidates() and get_option(session, b'ascii_mode')
+    assert not process(session, ord('~'), 1 << 30) and not commit()
     set_option(session, b'ascii_mode', False)
     send('n')
     assert candidates()
-    process(session, 0xff1b, 0)
+    assert simulate(session, b'{Escape}')
     assert not candidates() and not commit() and not get_option(session, b'ascii_mode')
     send('n ')
     assert commit() == '你'

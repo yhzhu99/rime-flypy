@@ -93,7 +93,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Engine prerequisite check failed' }
           uv run tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data
           if ($LASTEXITCODE -ne 0) { throw 'Desktop engine tests failed' }
-          uv run tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data --bim
+          uv run --with-requirements tests/requirements.txt tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data --bim
 
   keyd:
     runs-on: ubuntu-latest

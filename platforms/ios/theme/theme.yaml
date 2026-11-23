@@ -1,4 +1,4 @@
-config_version: "1.0.12"
+config_version: "1.0.13"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -15,7 +15,7 @@ preset_keys:
   __include: ./../public/preset_keys/default:/preset_keys
   __patch:
     commit_half_tilde_no_functional: {label: "半角~", text: "{asciitilde}", functional: false}
-  flypy_semicolon: {label: "；", send: semicolon}
+  flypy_semicolon: {label: "；\u2009`", send: semicolon, functional: false}
   flypy_reverse: {label: "`", text: "{`}", functional: false}
   flypy_cancel: {label: "清码", text: "{Escape}"}
   flypy_period: {label: "。", text: "{.}"}
@@ -66,6 +66,7 @@ preset_keyboards:
           - {when: normal, send: flypy_semicolon}
           - {when: has_menu, send: select_second}
         swipe_up: flypy_reverse
+        functional: false
         width: 11
         name: secondary
         preview: false

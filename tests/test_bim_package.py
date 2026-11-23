@@ -104,7 +104,7 @@ class BimPackageTests(unittest.TestCase):
         self.assertNotIn('long_click', semicolon)
         self.assertIs(semicolon['functional'], False)
         normal = theme['preset_keys'][semicolon['click'][0]['send']]
-        self.assertEqual(normal['label'].split(), ['；', '`'])
+        self.assertEqual(normal['label'], '；')
         self.assertIs(normal['functional'], False)
         reverse = theme['preset_keys'][semicolon['swipe_up']]
         self.assertEqual(reverse, {'label': '`', 'text': '{`}', 'functional': False})

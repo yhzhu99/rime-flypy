@@ -1,4 +1,4 @@
-config_version: "1.0.5"
+config_version: "1.0.6"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -68,7 +68,7 @@ preset_keyboards:
       - {click: commit_half_dot, width: 11, name: secondary, preview: false}
       - {click: return, swipe_up: next, width: 17, name: return, preview: false}
     __patch:
-      keys/@11/swipe_up: commit_half_tilde
+      keys/@11/swipe_up: "~"
       keys/@14/swipe_up: flypy_ascii_semicolon
       keys/@15/swipe_up: flypy_parentheses
       keys/@15/long_click: [flypy_left_paren, flypy_right_paren]

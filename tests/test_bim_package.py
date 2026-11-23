@@ -75,7 +75,7 @@ class BimPackageTests(unittest.TestCase):
         self.assertEqual((english[2]['click'], english[4]['click']), ('commit_half_comma', 'commit_half_dot'))
         self.assertTrue(all('swipe_up' not in english[index] for index in (2, 4)))
 
-    def test_english_swipes_use_half_width_commit_actions(self):
+    def test_english_swipes_use_half_width_symbols(self):
         files = package.bundle_files()['flypy-ios']
         layout = yaml.safe_load(files['layout.yaml'])
         theme = yaml.safe_load(files['theme.yaml'])
@@ -87,7 +87,7 @@ class BimPackageTests(unittest.TestCase):
         for index, key in enumerate(layout['letters']):
             if key.get('click') == 'a':
                 self.assertEqual(key['swipe_up'], 'commit_fulltilde')
-                self.assertEqual(english['__patch'][f'keys/@{index}/swipe_up'], 'commit_half_tilde')
+                self.assertEqual(english['__patch'][f'keys/@{index}/swipe_up'], '~')
             if key.get('click') not in expected:
                 continue
             full_width, action = expected[key['click']]

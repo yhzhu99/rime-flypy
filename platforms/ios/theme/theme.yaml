@@ -1,4 +1,4 @@
-config_version: "1.0.3"
+config_version: "1.0.4"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -29,6 +29,12 @@ preset_keys:
   flypy_right_paren: {label: ")", commit: ")"}
   flypy_left_bracket: {label: "[", commit: "["}
   flypy_right_bracket: {label: "]", commit: "]"}
+  flypy_full_parentheses: {label: "（）", text: "（）{Left}"}
+  flypy_full_brackets: {label: "【】", text: "【】{Left}"}
+  flypy_full_left_paren: {label: "（", commit: "（"}
+  flypy_full_right_paren: {label: "）", commit: "）"}
+  flypy_full_left_bracket: {label: "【", commit: "【"}
+  flypy_full_right_bracket: {label: "】", commit: "】"}
 preset_keyboards:
   __include: ./../public/preset_keyboards/default:/preset_keyboards
   __patch:
@@ -63,6 +69,10 @@ preset_keyboards:
       - {click: return, swipe_up: next, width: 17, name: return, preview: false}
     __patch:
       keys/@14/swipe_up: flypy_ascii_semicolon
+      keys/@15/swipe_up: flypy_parentheses
+      keys/@15/long_click: [flypy_left_paren, flypy_right_paren]
+      keys/@16/swipe_up: flypy_brackets
+      keys/@16/long_click: [flypy_left_bracket, flypy_right_bracket]
       keys/@25/swipe_up: commit_half_questionmark
       keys/@25/swipe_down: commit_half_questionmark
       keys/@26/swipe_up: flypy_ascii_exclamation

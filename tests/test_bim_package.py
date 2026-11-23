@@ -109,17 +109,19 @@ class BimPackageTests(unittest.TestCase):
             preset = theme['preset_keys'][key['swipe_up']]
             self.assertEqual((preset['label'], preset['commit']), (symbol, symbol))
 
-    def test_both_language_pages_share_bracket_pairs_and_individual_symbols(self):
+    def test_bracket_gestures_use_punctuation_for_the_current_language(self):
         files = package.bundle_files()['flypy-ios']
         layout = yaml.safe_load(files['layout.yaml'])
         theme = yaml.safe_load(files['theme.yaml'])
         english = theme['preset_keyboards']['english']['__patch']
         indexed = {key.get('click'): (index, key) for index, key in enumerate(layout['letters'])}
-        for letter, pair in (('g', '()'), ('h', '[]')):
+        for letter, chinese_pair, english_pair in (('g', '（）', '()'), ('h', '【】', '[]')):
             index, key = indexed[letter]
-            self.assertNotIn(f'keys/@{index}/swipe_up', english)
-            self.assertNotIn(f'keys/@{index}/long_click', english)
-            action = theme['preset_keys'][key['swipe_up']]
-            self.assertEqual((action['label'], action['text']), (pair, f'{pair}{{Left}}'))
-            singles = [theme['preset_keys'][name] for name in key['long_click']]
-            self.assertEqual([(preset['label'], preset['commit']) for preset in singles], [(symbol, symbol) for symbol in pair])
+            for pair, swipe, long_click in (
+                (chinese_pair, key['swipe_up'], key['long_click']),
+                (english_pair, english[f'keys/@{index}/swipe_up'], english[f'keys/@{index}/long_click']),
+            ):
+                action = theme['preset_keys'][swipe]
+                self.assertEqual((action['label'], action['text']), (pair, f'{pair}{{Left}}'))
+                singles = [theme['preset_keys'][name] for name in long_click]
+                self.assertEqual([(preset['label'], preset['commit']) for preset in singles], [(symbol, symbol) for symbol in pair])

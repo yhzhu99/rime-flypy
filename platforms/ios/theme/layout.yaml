@@ -27,8 +27,8 @@ letters:
   - {click: s, label: S, swipe_up: "/"}
   - {click: d, label: D, swipe_up: ":"}
   - {click: f, label: F, swipe_up: ";"}
-  - {click: g, label: G, swipe_up: flypy_parentheses, long_click: [flypy_left_paren, flypy_right_paren]}
-  - {click: h, label: H, swipe_up: flypy_brackets, long_click: [flypy_left_bracket, flypy_right_bracket]}
+  - {click: g, label: G, swipe_up: flypy_full_parentheses, long_click: [flypy_full_left_paren, flypy_full_right_paren]}
+  - {click: h, label: H, swipe_up: flypy_full_brackets, long_click: [flypy_full_left_bracket, flypy_full_right_bracket]}
   - {click: j, label: J, swipe_up: "@"}
   - {click: k, label: K, swipe_up: '"'}
   - {click: l, label: L, swipe_up: "'"}

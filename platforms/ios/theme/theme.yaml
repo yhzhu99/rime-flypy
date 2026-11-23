@@ -1,8 +1,11 @@
-config_version: "1.0.13"
+config_version: "1.0.14"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
   __include: ./../public/preset_styles/default:/preset_styles
+  __patch:
+    light_sm_md/keyboards: &flypy_pages [default, english, number, symbols]
+    dark_sm_md/keyboards: *flypy_pages
 preset_candidates:
   __include: ./../public/preset_candidates/default:/preset_candidates
 preset_fonts:
@@ -20,6 +23,13 @@ preset_keys:
   flypy_cancel: {label: "清码", text: "{Escape}"}
   flypy_comma: {label: "，", text: "{,}", functional: false}
   flypy_period: {label: "。", text: "{.}", functional: false}
+  flypy_dun: {label: "、", commit: "、", functional: false}
+  flypy_yuan: {label: "￥", commit: "￥", functional: false}
+  flypy_double_quotes: {label: "“”", text: "“”{Left}", functional: false}
+  flypy_single_quotes: {label: "‘’", text: "‘’{Left}", functional: false}
+  flypy_percent: {label: "%", commit: "%", functional: false}
+  flypy_asterisk: {label: "*", commit: "*", functional: false}
+  flypy_backslash: {label: '\', commit: '\', functional: false}
   flypy_to_english: {label: "英", send: Eisu_toggle, select: english}
   flypy_commit_code_to_english: {label: "英", text: "{Return}{flypy_to_english}"}
   flypy_to_chinese: {label: "中", send: Eisu_toggle, select: default}
@@ -92,14 +102,19 @@ preset_keyboards:
       - {click: commit_half_dot, width: 11, name: secondary, preview: false}
       - {click: return, swipe_up: next, width: 17, name: return, preview: false}
     __patch:
+      keys/@9/swipe_down: "$"
       keys/@11/functional: false
       keys/@11/swipe_up: commit_half_tilde_no_functional
       keys/@11/long_click: [commit_half_tilde_no_functional]
+      keys/@12/swipe_up: commit_halfslash
+      keys/@13/swipe_up: ":"
       keys/@14/swipe_up: flypy_ascii_semicolon
       keys/@15/swipe_up: flypy_parentheses
       keys/@15/long_click: [flypy_left_paren, flypy_right_paren]
       keys/@16/swipe_up: flypy_brackets
       keys/@16/long_click: [flypy_left_bracket, flypy_right_bracket]
+      keys/@18/swipe_up: '"'
+      keys/@19/swipe_up: "'"
       keys/@25/swipe_up: commit_half_questionmark
       keys/@25/swipe_down: commit_half_questionmark
       keys/@26/swipe_up: flypy_ascii_exclamation

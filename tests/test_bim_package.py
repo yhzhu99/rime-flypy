@@ -131,8 +131,8 @@ class BimPackageTests(unittest.TestCase):
         layout = yaml.safe_load(files['layout.yaml'])
         theme = yaml.safe_load(files['theme.yaml'])
         expected = {
-            'v': ('？', 'commit_half_questionmark'),
-            'b': ('！', 'flypy_ascii_exclamation'),
+            'v': ('commit_fullquestionmark', 'commit_half_questionmark'),
+            'b': ('commit_fullexclamationpoint', 'flypy_ascii_exclamation'),
         }
         english = theme['preset_keyboards']['english']
         tilde_index, tilde_key = next((index, key) for index, key in enumerate(layout['letters']) if key.get('click') == 'a')
@@ -149,13 +149,37 @@ class BimPackageTests(unittest.TestCase):
             if key.get('click') not in expected:
                 continue
             full_width, action = expected[key['click']]
-            self.assertIn(full_width, (key['swipe_up'], key['swipe_down']))
             for direction in ('swipe_up', 'swipe_down'):
+                self.assertEqual(key[direction], full_width)
                 self.assertEqual(english['__patch'][f'keys/@{index}/{direction}'], action)
         semicolon_index = next(index for index, key in enumerate(layout['letters']) if key.get('click') == 'f')
         self.assertEqual(english['__patch'][f'keys/@{semicolon_index}/swipe_up'], 'flypy_ascii_semicolon')
         for action, symbol in (('flypy_ascii_exclamation', '!'), ('flypy_ascii_semicolon', ';')):
             self.assertEqual(theme['preset_keys'][action]['commit'], symbol)
+
+    def test_punctuation_legends_follow_the_current_page(self):
+        files = package.bundle_files()['flypy-ios']
+        letters = yaml.safe_load(files['layout.yaml'])['letters']
+        theme = yaml.safe_load(files['theme.yaml'])
+        overrides = theme['preset_keyboards']['english']['__patch']
+        for letter, gesture, chinese, english in (
+            ('s', 'swipe_up', 'flypy_dun', 'commit_halfslash'), ('d', 'swipe_up', 'commit_fullcolon', ':'),
+            ('f', 'swipe_up', 'commit_fullsemicolon', 'flypy_ascii_semicolon'),
+            ('k', 'swipe_up', 'flypy_double_quotes', '"'), ('l', 'swipe_up', 'flypy_single_quotes', "'"),
+            ('p', 'swipe_down', 'flypy_yuan', '$'),
+        ):
+            index, key = next((index, key) for index, key in enumerate(letters) if key.get('click') == letter)
+            self.assertEqual(key[gesture], chinese)
+            self.assertEqual(overrides[f'keys/@{index}/{gesture}'], english)
+        for name, pair in (('flypy_double_quotes', '“”'), ('flypy_single_quotes', '‘’')):
+            action = theme['preset_keys'][name]
+            self.assertEqual((action['label'], action['text']), (pair, pair + '{Left}'))
+        for name, symbol in (('flypy_dun', '、'), ('flypy_yuan', '￥'), ('flypy_percent', '%'),
+                             ('flypy_asterisk', '*'), ('flypy_backslash', '\\')):
+            action = theme['preset_keys'][name]
+            self.assertEqual((action['label'], action['commit']), (symbol, symbol))
+        for style in ('light_sm_md', 'dark_sm_md'):
+            self.assertEqual(theme['preset_styles']['__patch'][f'{style}/keyboards'], ['default', 'english', 'number', 'symbols'])
 
     def test_nm_swipes_add_symbols_instead_of_repeating_punctuation(self):
         files = package.bundle_files()['flypy-ios']

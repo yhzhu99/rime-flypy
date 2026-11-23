@@ -12,33 +12,33 @@ geometry:
   shadow: {radius: 0, offsetX: 0, offsetY: 0}
 
 letters:
-  - {click: q, label: Q, swipe_up: commit_1, swipe_down: "%", long_click: [commit_1, commit_Q]}
+  - {click: q, label: Q, swipe_up: commit_1, swipe_down: flypy_percent, long_click: [commit_1, commit_Q]}
   - {click: w, label: W, swipe_up: commit_2, swipe_down: "+", long_click: [commit_2, commit_W]}
-  - {click: e, label: E, swipe_up: commit_3, swipe_down: "*", long_click: [commit_3, commit_E]}
+  - {click: e, label: E, swipe_up: commit_3, swipe_down: flypy_asterisk, long_click: [commit_3, commit_E]}
   - {click: r, label: R, swipe_up: commit_4, swipe_down: "&", long_click: [commit_4, commit_R]}
   - {click: t, label: T, swipe_up: commit_5, swipe_down: "±", long_click: [commit_5, commit_T]}
   - {click: y, label: Y, swipe_up: commit_6, swipe_down: "×", long_click: [commit_6, commit_Y]}
-  - {click: u, label: U, swipe_up: commit_7, swipe_down: '\', long_click: [commit_7, commit_U]}
+  - {click: u, label: U, swipe_up: commit_7, swipe_down: flypy_backslash, long_click: [commit_7, commit_U]}
   - {click: i, label: I, swipe_up: commit_8, swipe_down: "¥", long_click: [commit_8, commit_I]}
   - {click: o, label: O, swipe_up: commit_9, swipe_down: "°", long_click: [commit_9, commit_O]}
-  - {click: p, label: P, swipe_up: commit_0, swipe_down: "$", long_click: [commit_0, commit_P]}
+  - {click: p, label: P, swipe_up: commit_0, swipe_down: flypy_yuan, long_click: [commit_0, commit_P]}
   - {width: 5}
   - {click: a, label: A, swipe_up: commit_fulltilde}
-  - {click: s, label: S, swipe_up: "/"}
-  - {click: d, label: D, swipe_up: ":"}
-  - {click: f, label: F, swipe_up: ";"}
+  - {click: s, label: S, swipe_up: flypy_dun}
+  - {click: d, label: D, swipe_up: commit_fullcolon}
+  - {click: f, label: F, swipe_up: commit_fullsemicolon}
   - {click: g, label: G, swipe_up: flypy_full_parentheses, long_click: [flypy_full_left_paren, flypy_full_right_paren]}
   - {click: h, label: H, swipe_up: flypy_full_brackets, long_click: [flypy_full_left_bracket, flypy_full_right_bracket]}
   - {click: j, label: J, swipe_up: "@"}
-  - {click: k, label: K, swipe_up: '"'}
-  - {click: l, label: L, swipe_up: "'"}
+  - {click: k, label: K, swipe_up: flypy_double_quotes}
+  - {click: l, label: L, swipe_up: flypy_single_quotes}
   - {width: 5}
   - {click: shift, width: 15, name: shift, preview: false}
   - {click: z, label: Z, swipe_up: "-"}
   - {click: x, label: X, swipe_up: commit_halfunderline}
   - {click: c, label: C, swipe_up: "#"}
-  - {click: v, label: V, swipe_up: "?", swipe_down: "？"}
-  - {click: b, label: B, swipe_up: "!", swipe_down: "！"}
+  - {click: v, label: V, swipe_up: commit_fullquestionmark, swipe_down: commit_fullquestionmark}
+  - {click: b, label: B, swipe_up: commit_fullexclamationpoint, swipe_down: commit_fullexclamationpoint}
   - {click: n, label: N, swipe_up: flypy_equals}
   - {click: m, label: M, swipe_up: flypy_pipe}
   - {click: backspace, width: 15, name: backspace, preview: false}

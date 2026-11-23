@@ -27,8 +27,8 @@ letters:
   - {click: s, label: S, swipe_up: "/"}
   - {click: d, label: D, swipe_up: ":"}
   - {click: f, label: F, swipe_up: ";"}
-  - {click: g, label: G, swipe_up: "("}
-  - {click: h, label: H, swipe_up: ")"}
+  - {click: g, label: G, swipe_up: flypy_parentheses, long_click: [flypy_left_paren, flypy_right_paren]}
+  - {click: h, label: H, swipe_up: flypy_brackets, long_click: [flypy_left_bracket, flypy_right_bracket]}
   - {click: j, label: J, swipe_up: "@"}
   - {click: k, label: K, swipe_up: '"'}
   - {click: l, label: L, swipe_up: "'"}
@@ -40,5 +40,5 @@ letters:
   - {click: v, label: V, swipe_up: "?", swipe_down: "？"}
   - {click: b, label: B, swipe_up: "!", swipe_down: "！"}
   - {click: n, label: N, swipe_up: flypy_equals}
-  - {click: m, label: M, swipe_up: flypy_ellipsis}
+  - {click: m, label: M, swipe_up: flypy_pipe}
   - {click: backspace, width: 15, name: backspace, preview: false}

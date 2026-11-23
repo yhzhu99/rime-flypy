@@ -1,0 +1,9 @@
+name: 小鹤音形
+author: 何海峰
+version: "10.9.4"
+description: rime-flypy 原版词库、四码顶字和小鹤音形反查
+url: https://github.com/yhzhu99/rime-flypy
+use_theme:
+  default: themes/default
+  custom:
+    flypy: themes/flypy-ios

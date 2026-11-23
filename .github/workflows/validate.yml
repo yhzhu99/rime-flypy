@@ -92,6 +92,8 @@ jobs:
           uv run python -c "from pathlib import Path; import setup; setup.require_recent_engine(Path('.local/engine/dist/lib/rime.dll').resolve())"
           if ($LASTEXITCODE -ne 0) { throw 'Engine prerequisite check failed' }
           uv run tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data
+          if ($LASTEXITCODE -ne 0) { throw 'Desktop engine tests failed' }
+          uv run tests/librime_behavior.py .local/engine/dist/lib/rime.dll .local/weasel/data --bim
 
   keyd:
     runs-on: ubuntu-latest

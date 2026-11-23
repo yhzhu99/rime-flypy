@@ -1,8 +1,8 @@
 # rime-flypy
 
-个人小鹤音形配置：共用词库和 Lua 扩展，支持 Windows、Linux、macOS 的固定中英文键和 iPhone 超越输入法的触屏方案。
+个人小鹤音形配置：共用词库和 Lua 扩展，支持 Windows、Linux、macOS 的固定中英文键和 iPhone 上 iRime / 超越输入法的触屏方案。
 
-**iPhone：**按 [超越输入法（BiM）安装指南](docs/ios.md) 导入方案与主题。沿用本仓库的词库，不需要桌面改键。
+**iPhone：**按 [iRime / 超越输入法安装指南](docs/ios.md) 导入方案与主题。沿用本仓库的词库，不需要桌面改键。
 
 ## 新电脑入口
 
@@ -53,7 +53,7 @@ Linux 统一使用 **IBus-Rime + keyd**。Windows 提供已验证版小狼毫/�
 | Windows / 小狼毫 | `%APPDATA%\Rime` | Scancode Map，无额外常驻软件，需重启 | [Windows](docs/windows.md) |
 | Linux / IBus-Rime | `~/.config/ibus/rime` | keyd，覆盖 X11、Wayland 和控制台 | [Linux](docs/linux.md) |
 | macOS / 鼠须管 | `~/Library/Rime` | Karabiner-Elements | [macOS](docs/macos.md) |
-| iOS / 超越输入法 | BiM Space 的 `schemas/` 和 `themes/` | 屏幕上的中英键 | [iOS](docs/ios.md) |
+| iOS / iRime 5、超越输入法 | Space 的 `schemas/` 和 `themes/` | 屏幕上的中英键 | [iOS](docs/ios.md) |
 
 Linux 的 keyd 和 macOS 的 Karabiner 需要在对应平台另外安装，不能只复制 Windows 注册表配置。
 

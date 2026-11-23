@@ -23,7 +23,7 @@ letters:
   - {click: o, label: O, swipe_up: commit_9, swipe_down: "°", long_click: [commit_9, commit_O]}
   - {click: p, label: P, swipe_up: commit_0, swipe_down: "$", long_click: [commit_0, commit_P]}
   - {width: 5}
-  - {click: a, label: A, swipe_up: commit_half_tilde_no_functional}
+  - {click: a, label: A, swipe_up: commit_fulltilde}
   - {click: s, label: S, swipe_up: "/"}
   - {click: d, label: D, swipe_up: ":"}
   - {click: f, label: F, swipe_up: ";"}
@@ -35,7 +35,7 @@ letters:
   - {width: 5}
   - {click: shift, width: 15, name: shift, preview: false}
   - {click: z, label: Z, swipe_up: "-"}
-  - {click: x, label: X, swipe_up: "_"}
+  - {click: x, label: X, swipe_up: commit_halfunderline}
   - {click: c, label: C, swipe_up: "#"}
   - {click: v, label: V, swipe_up: "?", swipe_down: "？"}
   - {click: b, label: B, swipe_up: "!", swipe_down: "！"}

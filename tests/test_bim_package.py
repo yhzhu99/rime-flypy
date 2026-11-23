@@ -40,9 +40,11 @@ class BimPackageTests(unittest.TestCase):
         self.assertEqual(''.join(key['click'] for key in letters), 'qwertyuiopasdfghjklzxcvbnm')
         self.assertEqual([key['swipe_up'] for key in letters[:10]], [f'commit_{digit}' for digit in '1234567890'])
         self.assertTrue(all(key['swipe_down'] for key in letters[:10]))
+        index, underscore = next((index, key) for index, key in enumerate(layout['letters']) if key.get('click') == 'x')
+        self.assertEqual(underscore['swipe_up'], 'commit_halfunderline')
+        self.assertNotIn(f'keys/@{index}/swipe_up', theme['preset_keyboards']['english']['__patch'])
         self.assertEqual(theme['preset_keys']['flypy_semicolon']['send'], 'semicolon')
         self.assertEqual(theme['preset_keys']['flypy_reverse'], {'label': '`', 'send': 'grave', 'functional': False})
-        self.assertEqual(next(key for key in letters if key['click'] == 'a')['swipe_up'], 'commit_half_tilde_no_functional')
         for page, mode, target, current_label, target_label in (
             ('default', 0, 'english', '中', '英'),
             ('english', 1, 'default', '英', '中'),
@@ -83,6 +85,9 @@ class BimPackageTests(unittest.TestCase):
         }
         english = theme['preset_keyboards']['english']
         for index, key in enumerate(layout['letters']):
+            if key.get('click') == 'a':
+                self.assertEqual(key['swipe_up'], 'commit_fulltilde')
+                self.assertEqual(english['__patch'][f'keys/@{index}/swipe_up'], 'commit_half_tilde')
             if key.get('click') not in expected:
                 continue
             full_width, action = expected[key['click']]

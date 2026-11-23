@@ -15,13 +15,15 @@ def bundle_files():
         source = (ROOT / f'{name}.schema.yaml').read_bytes().replace(b'\r\n', b'\n')
         if source.count(DESKTOP_PROCESSOR) != 1:
             raise ValueError(f'Expected one desktop-only language processor in {name}')
-        schema[f'{name}.schema.yaml'] = source.replace(DESKTOP_PROCESSOR, b'')
+        touch_processor = b'    - lua_processor@*ios_ascii_tilde\n' if name == 'flypy' else b''
+        schema[f'{name}.schema.yaml'] = source.replace(DESKTOP_PROCESSOR, touch_processor)
         schema[f'{name}.dict.yaml'] = (ROOT / f'{name}.dict.yaml').read_bytes()
     for path in sorted((ROOT / 'flypy').glob('*.dict.yaml')):
         schema[f'flypy/{path.name}'] = path.read_bytes()
     for path in sorted((ROOT / 'lua').glob('*.lua')):
         if path.name != 'language_keys.lua':
             schema[f'lua/{path.name}'] = path.read_bytes()
+    schema['lua/ios_ascii_tilde.lua'] = (IOS / 'schema/lua/ios_ascii_tilde.lua').read_bytes()
     theme = {path.name: path.read_bytes() for path in sorted((IOS / 'theme').glob('*.yaml'))}
     return {'flypy': schema, 'flypy-ios': theme}
 

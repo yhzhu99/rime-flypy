@@ -30,6 +30,9 @@ class BimPackageTests(unittest.TestCase):
                 for name in ('flypy', 'flypydz'):
                     desktop = yaml.safe_load((package.ROOT / f'{name}.schema.yaml').read_bytes())
                     desktop['engine']['processors'].remove('lua_processor@*language_keys')
+                    if name == 'flypy':
+                        desktop['engine']['processors'].insert(0, 'lua_processor@*ios_ascii_tilde')
+                        self.assertIn('flypy/lua/ios_ascii_tilde.lua', schema.namelist())
                     self.assertEqual(yaml.safe_load(schema.read(f'flypy/{name}.schema.yaml')), desktop)
                 for path in package.ROOT.glob('lua/*.lua'):
                     if path.name != 'language_keys.lua':
@@ -131,6 +134,9 @@ class BimPackageTests(unittest.TestCase):
         tilde_path = f'keys/@{tilde_index}'
         tilde_action = english['__patch'][f'{tilde_path}/swipe_up']
         self.assertEqual(tilde_action, 'commit_half_tilde_no_functional')
+        self.assertEqual(theme['preset_keys']['__patch'][tilde_action], {
+            'label': '半角~', 'text': '{asciitilde}', 'functional': False,
+        })
         self.assertIs(english['__patch'][f'{tilde_path}/functional'], False)
         self.assertEqual(english['__patch'][f'{tilde_path}/long_click'], [tilde_action])
         for index, key in enumerate(layout['letters']):

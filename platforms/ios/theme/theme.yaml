@@ -1,4 +1,4 @@
-config_version: "1.0.11"
+config_version: "1.0.12"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -13,6 +13,8 @@ preset_color_schemes:
   __include: ./../public/preset_color_schemes/default:/preset_color_schemes
 preset_keys:
   __include: ./../public/preset_keys/default:/preset_keys
+  __patch:
+    commit_half_tilde_no_functional: {label: "半角~", text: "{asciitilde}", functional: false}
   flypy_semicolon: {label: "；", send: semicolon}
   flypy_reverse: {label: "`", text: "{`}", functional: false}
   flypy_cancel: {label: "清码", text: "{Escape}"}

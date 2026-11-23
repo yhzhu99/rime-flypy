@@ -1,4 +1,4 @@
-config_version: "1.0.9"
+config_version: "1.0.10"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -20,7 +20,6 @@ preset_keys:
   flypy_to_english: {label: "英", send: Eisu_toggle, select: english}
   flypy_commit_code_to_english: {label: "英", text: "{Return}{flypy_to_english}"}
   flypy_to_chinese: {label: "中", send: Eisu_toggle, select: default}
-  flypy_ascii_tilde: {label: "~", text: "~", functional: false}
   flypy_ascii_exclamation: {label: "!", commit: "!"}
   flypy_ascii_semicolon: {label: ";", commit: ";"}
   flypy_equals: {label: "=", commit: "="}
@@ -86,7 +85,9 @@ preset_keyboards:
       - {click: commit_half_dot, width: 11, name: secondary, preview: false}
       - {click: return, swipe_up: next, width: 17, name: return, preview: false}
     __patch:
-      keys/@11/swipe_up: flypy_ascii_tilde
+      keys/@11/functional: false
+      keys/@11/swipe_up: commit_half_tilde_no_functional
+      keys/@11/long_click: [commit_half_tilde_no_functional]
       keys/@14/swipe_up: flypy_ascii_semicolon
       keys/@15/swipe_up: flypy_parentheses
       keys/@15/long_click: [flypy_left_paren, flypy_right_paren]

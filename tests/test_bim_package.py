@@ -99,7 +99,7 @@ class BimPackageTests(unittest.TestCase):
         layout = yaml.safe_load(files['layout.yaml'])
         theme = yaml.safe_load(files['theme.yaml'])
         english = theme['preset_keyboards']['english']['__patch']
-        expected = {'n': ('=', '='), 'm': ('……', '...')}
+        expected = {'n': ('=', '='), 'm': ('……', '|')}
         indexed = {key.get('click'): (index, key) for index, key in enumerate(layout['letters'])}
         for letter, (chinese_symbol, english_symbol) in expected.items():
             index, key = indexed[letter]
@@ -110,3 +110,16 @@ class BimPackageTests(unittest.TestCase):
             for action, symbol in ((chinese_action, chinese_symbol), (english_action, english_symbol)):
                 preset = theme['preset_keys'][action]
                 self.assertEqual((preset['label'], preset['commit']), (symbol, symbol))
+
+    def test_english_bracket_pairs_keep_individual_symbols(self):
+        files = package.bundle_files()['flypy-ios']
+        layout = yaml.safe_load(files['layout.yaml'])
+        theme = yaml.safe_load(files['theme.yaml'])
+        english = theme['preset_keyboards']['english']['__patch']
+        indexed = {key.get('click'): (index, key) for index, key in enumerate(layout['letters'])}
+        for letter, chinese_symbol, pair in (('g', '(', '()'), ('h', ')', '[]')):
+            index, key = indexed[letter]
+            self.assertEqual(key['swipe_up'], chinese_symbol)
+            action = theme['preset_keys'][english[f'keys/@{index}/swipe_up']]
+            self.assertEqual((action['label'], action['text']), (pair, f'{pair}{{Left}}'))
+            self.assertEqual(english[f'keys/@{index}/long_click'], list(pair))

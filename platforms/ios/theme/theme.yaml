@@ -23,7 +23,9 @@ preset_keys:
   flypy_ascii_semicolon: {label: ";", commit: ";"}
   flypy_equals: {label: "=", commit: "="}
   flypy_ellipsis: {label: "……", commit: "……"}
-  flypy_ascii_ellipsis: {label: "...", commit: "..."}
+  flypy_pipe: {label: "|", commit: "|"}
+  flypy_parentheses: {label: "()", text: "(){Left}"}
+  flypy_brackets: {label: "[]", text: "[]{Left}"}
 preset_keyboards:
   __include: ./../public/preset_keyboards/default:/preset_keyboards
   __patch:
@@ -58,8 +60,12 @@ preset_keyboards:
       - {click: return, swipe_up: next, width: 17, name: return, preview: false}
     __patch:
       keys/@14/swipe_up: flypy_ascii_semicolon
+      keys/@15/swipe_up: flypy_parentheses
+      keys/@15/long_click: ["(", ")"]
+      keys/@16/swipe_up: flypy_brackets
+      keys/@16/long_click: ["[", "]"]
       keys/@25/swipe_up: commit_half_questionmark
       keys/@25/swipe_down: commit_half_questionmark
       keys/@26/swipe_up: flypy_ascii_exclamation
       keys/@26/swipe_down: flypy_ascii_exclamation
-      keys/@28/swipe_up: flypy_ascii_ellipsis
+      keys/@28/swipe_up: flypy_pipe

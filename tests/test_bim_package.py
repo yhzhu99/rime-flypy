@@ -19,6 +19,9 @@ class BimPackageTests(unittest.TestCase):
                 self.assertEqual({Path(name).parts[0] for name in schema.namelist()}, {'flypy'})
                 self.assertEqual({Path(name).parts[0] for name in theme.namelist()}, {'flypy-ios'})
                 self.assertIn('flypy-ios/theme.yaml', theme.namelist())
+                theme_info = yaml.safe_load(theme.read('flypy-ios/info.yaml'))
+                theme_config = yaml.safe_load(theme.read('flypy-ios/theme.yaml'))
+                self.assertEqual(theme_info['version'], theme_config['config_version'])
                 for path in (*package.ROOT.glob('*.dict.yaml'), *package.ROOT.glob('flypy/*.dict.yaml')):
                     self.assertEqual(schema.read(f'flypy/{path.relative_to(package.ROOT).as_posix()}'), path.read_bytes())
                 self.assertNotIn('flypy/lua/language_keys.lua', schema.namelist())
@@ -84,10 +87,11 @@ class BimPackageTests(unittest.TestCase):
             'b': ('！', 'flypy_ascii_exclamation'),
         }
         english = theme['preset_keyboards']['english']
+        tilde_index, tilde_key = next((index, key) for index, key in enumerate(layout['letters']) if key.get('click') == 'a')
+        self.assertEqual(tilde_key['swipe_up'], 'commit_fulltilde')
+        tilde_action = english['__patch'][f'keys/@{tilde_index}/swipe_up']
+        self.assertEqual(theme['preset_keys'][tilde_action], {'label': '~', 'text': '~', 'functional': False})
         for index, key in enumerate(layout['letters']):
-            if key.get('click') == 'a':
-                self.assertEqual(key['swipe_up'], 'commit_fulltilde')
-                self.assertEqual(english['__patch'][f'keys/@{index}/swipe_up'], '~')
             if key.get('click') not in expected:
                 continue
             full_width, action = expected[key['click']]

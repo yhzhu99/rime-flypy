@@ -1,4 +1,4 @@
-config_version: "1.0.16"
+config_version: "1.0.17"
 style:
   __include: ./../public/style/default:/style
 preset_styles:
@@ -102,8 +102,6 @@ preset_keyboards:
       - {click: return, swipe_up: next, width: 17, name: return, preview: false}
     __patch:
       keys/@9/swipe_down: "$"
-      keys/@11/functional: false
-      keys/@11/swipe_up: commit_half_tilde_no_functional
       keys/@11/long_click: [commit_half_tilde_no_functional]
       keys/@13/swipe_up: ":"
       keys/@14/swipe_up: flypy_ascii_semicolon

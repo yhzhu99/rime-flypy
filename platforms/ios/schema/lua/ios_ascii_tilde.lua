@@ -1,7 +1,10 @@
 return function(key, env)
-  local context = env.engine.context
-  if key:repr() ~= "asciitilde" or not context:get_option("ascii_mode") or context:is_composing() then
+  if key:repr() ~= "asciitilde" then
     return 2
+  end
+  local context = env.engine.context
+  if context:is_composing() then
+    context:commit()
   end
   env.engine:commit_text("~")
   return 1

@@ -166,10 +166,15 @@ def check_bim(session):
 
         config = yaml.safe_load(theme.read('flypy-ios/theme.yaml'))
     tilde_event = config['preset_keys']['__patch']['commit_half_tilde_no_functional']['text']
+    for ascii_mode in (True, False):
+        set_option(session, b'ascii_mode', ascii_mode)
+        assert simulate(session, tilde_event.encode('ascii'))
+        assert commit() == '~' and not candidates() and bool(get_option(session, b'ascii_mode')) == ascii_mode
+        assert not process(session, ord('~'), 1 << 30) and not commit()
+    send('n')
+    assert candidates()[0][0] == '你'
     assert simulate(session, tilde_event.encode('ascii'))
-    assert commit() == '~' and not candidates() and get_option(session, b'ascii_mode')
-    assert not process(session, ord('~'), 1 << 30) and not commit()
-    set_option(session, b'ascii_mode', False)
+    assert commit() == '你~' and not candidates() and not get_option(session, b'ascii_mode')
     send('n')
     assert candidates()
     assert simulate(session, b'{Escape}')

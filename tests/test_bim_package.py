@@ -136,14 +136,16 @@ class BimPackageTests(unittest.TestCase):
         }
         english = theme['preset_keyboards']['english']
         tilde_index, tilde_key = next((index, key) for index, key in enumerate(layout['letters']) if key.get('click') == 'a')
-        self.assertEqual(tilde_key['swipe_up'], 'commit_fulltilde')
         tilde_path = f'keys/@{tilde_index}'
-        tilde_action = english['__patch'][f'{tilde_path}/swipe_up']
+        tilde_action = tilde_key['swipe_up']
         self.assertEqual(tilde_action, 'commit_half_tilde_no_functional')
         self.assertEqual(theme['preset_keys']['__patch'][tilde_action], {
             'label': '~\u2060', 'text': '{asciitilde}', 'functional': False,
         })
-        self.assertIs(english['__patch'][f'{tilde_path}/functional'], False)
+        for page in ('default', 'english'):
+            overrides = theme['preset_keyboards'][page]['__patch']
+            self.assertEqual(overrides.get(f'{tilde_path}/swipe_up', tilde_action), tilde_action)
+            self.assertIs(overrides.get(f'{tilde_path}/functional', tilde_key['functional']), False)
         self.assertEqual(english['__patch'][f'{tilde_path}/long_click'], [tilde_action])
         for index, key in enumerate(layout['letters']):
             if key.get('click') not in expected:

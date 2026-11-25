@@ -31,14 +31,15 @@ class ConfigurationTests(unittest.TestCase):
     def test_fixed_language_keys_run_before_english_passthrough(self):
         default = yaml.safe_load((ROOT / 'default.custom.yaml').read_text(encoding='utf8'))['patch']
         switches = default['ascii_composer/switch_key']
-        self.assertEqual(switches['Shift_L'], 'set_ascii_mode')
-        for key in ('Shift_R', 'Alt_L', 'Alt_R', 'Control_L', 'Control_R', 'Caps_Lock'):
+        for key in ('Shift_L', 'Shift_R'):
+            self.assertEqual(switches[key], 'set_ascii_mode', key)
+        for key in ('Alt_L', 'Alt_R', 'Control_L', 'Control_R', 'Caps_Lock'):
             self.assertEqual(switches[key], 'noop', key)
         for name in ('flypy', 'flypydz'):
             schema = yaml.safe_load((ROOT / f'{name}.schema.yaml').read_text(encoding='utf8'))
             processors = schema['engine']['processors']
             self.assertLess(processors.index('lua_processor@*language_keys'), processors.index('ascii_composer'))
-            self.assertFalse(any(binding['accept'] == 'Shift_R' for binding in schema['key_binder'].get('bindings', [])))
+            self.assertFalse(any(binding['accept'] in ('Shift_L', 'Shift_R') for binding in schema['key_binder'].get('bindings', [])))
 
     def test_linux_and_macos_physical_keys_agree(self):
         lines = (ROOT / 'platforms/linux/rime-flypy.conf').read_text().split('[main]', 1)[1].splitlines()

@@ -59,7 +59,7 @@ function M.func(key, env)
     sync_mode(env, shared_ascii)
   end
   env.ready = true
-  if key.keycode == 0xffe1 and key:release() and not ctx:get_option("ascii_mode")
+  if (key.keycode == 0xffe1 or key.keycode == 0xffe2) and key:release() and not ctx:get_option("ascii_mode")
       and ctx:is_composing() then
     -- ascii_composer clears the composition before notifying the mode change.
     -- No notification occurs for a chord, a long hold, or an English-mode tap.

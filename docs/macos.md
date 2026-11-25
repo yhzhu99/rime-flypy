@@ -4,7 +4,7 @@
 
 ## 部署 Rime
 
-安装当前 [Squirrel / 鼠须管](https://github.com/rime/squirrel)，确认内核支持 `set_ascii_mode` 并带有 Lua 插件。旧版前端可能不能正确区分左右 Shift；遇到右 Shift 也改变语言时，应先升级并检查前端事件，不要把两侧都设成切换键。
+安装当前 [Squirrel / 鼠须管](https://github.com/rime/squirrel)，确认内核支持 `set_ascii_mode` 并带有 Lua 插件。单按左右 Shift 都应固定进入英文，而不是切换中英文。若其中一侧无效，先检查前端是否传递了该键的按下和松开事件。
 
 仅部署 Rime 配置时，在仓库目录执行，原有文件会自动备份：
 
@@ -43,4 +43,4 @@ cp platforms/macos/rime-flypy.json "$HOME/.config/karabiner/assets/complex_modif
 
 先把 Rime 的左 Shift 改回 `commit_code` 并重新部署，恢复中文入口。然后在 Karabiner 中禁用这三条 `rime-flypy` 规则即可。复制到 assets 的 JSON 只是规则模板，删除它并不会自动关闭已经启用的规则。
 
-macOS 方案目前提供了配置与静态检查，还未在真实 Mac 上验收。按仓库 README 的实机清单检查，尤其要确认左右 Shift 的区分和 F13 没有被系统截获。
+macOS 方案目前提供了配置与静态检查，还未在真实 Mac 上验收。按仓库 README 的实机清单检查，尤其要分别验证两侧 Shift 单按和组合键，并确认 F13 没有被系统截获。

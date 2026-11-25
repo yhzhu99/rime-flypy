@@ -70,9 +70,9 @@ gsettings set org.freedesktop.ibus.panel custom-font 'Sans 16'
 
 ## 中英文状态：各应用共享
 
-`lua/language_keys.lua` 同步同一 Rime 服务内的所有方案会话：左 Shift 选择英文、右 Alt 选择中文后，新旧应用会话都沿用最新状态。新会话/方案重载的默认值不能重置共享状态。输入法服务重启后从中文开始。
+`lua/language_keys.lua` 同步同一 Rime 服务内的所有方案会话：任一 Shift 选择英文、右 Alt 选择中文后，新旧应用会话都沿用最新状态。新会话/方案重载的默认值不能重置共享状态。输入法服务重启后从中文开始。
 
-同步只改变 `ascii_mode`，不在应用间复制编码或上屏文本。左 Shift 的原始编码只在收到该按键的应用中上屏。大写、全半角、简繁和标点模式不在这项同步范围。
+同步只改变 `ascii_mode`，不在应用间复制编码或上屏文本。任一 Shift 触发的原始编码只在收到该按键的应用中上屏。大写、全半角、简繁和标点模式不在这项同步范围。
 
 小狼毫继续保留 `global_ascii: true`，并整体替换默认 `app_options`，清除 `cmd.exe`/`conhost.exe` 的强制英文，仅保留 Firefox 显示兼容项；鼠须管没有同名原生开关，因此由共用 Lua 实现。macOS 的 `app_options` 整体替换上游默认项，移除所有应用专用的 `ascii_mode`/`vim_mode`，仅保留显示兼容设置。IBus 的 `use-global-engine` 保证各应用共用同一个输入法框架，框架内的中英文模式仍由 Lua 同步。
 
